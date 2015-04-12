@@ -16,6 +16,8 @@ public class GarbageRobot extends BasicGame
 	private TiledMap map; //map
 	private Animation sprite, up, down, left, right; //sprites
 	private float x = 64f, y = 64f; //initial position of main sprite
+	private boolean[][] blocked; //array of map's squares (blocked property)
+	private static final int SIZE = 32; 
 	
     public GarbageRobot()
     {
@@ -61,6 +63,21 @@ public class GarbageRobot extends BasicGame
     	left = new Animation(movementLeft, duration, false);
     	right = new Animation(movementRight, duration, false); 
     	sprite = right; //main orientation  	
+    	
+    	//set array of blocked property from map's size
+    	blocked = new boolean[map.getWidth()][map.getHeight()];
+    	for (int x=0; x<map.getWidth(); x++)
+    	{
+    		for (int y=0; y<map.getHeight(); y++)
+    	    {
+    			int tileID = map.getTileId(x, y, 0);
+    	        String value = map.getTileProperty(tileID, "blocked", "false");
+    	        if ("true".equals(value))
+    	        {
+    	        	blocked[x][y] = true;
+    	        }
+    	    }
+    	 }
     }
  
     //Update values (need to override)
@@ -71,30 +88,42 @@ public class GarbageRobot extends BasicGame
     	Input input = container.getInput();
     	
     	//set event for every key pressed
-    	if (input.isKeyDown(Input.KEY_UP))
-    	{
-    	    sprite = up; //set sprite
-    	    sprite.update(delta); //update sprite
-    	    y -= delta * 0.2f; //update position of delta distance (higher delta = faster moving)
-    	}
-    	else if (input.isKeyDown(Input.KEY_DOWN))
-    	{
-    	    sprite = down;
-    	    sprite.update(delta);
-    	    y += delta * 0.2f;
-    	}
-    	else if (input.isKeyDown(Input.KEY_LEFT))
-    	{
-    	    sprite = left;
-    	    sprite.update(delta);
-    	    x -= delta * 0.2f;
-    	}
-    	else if (input.isKeyDown(Input.KEY_RIGHT))
-    	{
-    	    sprite = right;
-    	    sprite.update(delta);
-    	    x += delta * 0.2f;
-    	}
+        if (input.isKeyDown(Input.KEY_UP))
+        {
+            sprite = up; //set sprite
+            if (!isBlocked(x, y - delta * 0.2f))
+            {
+                sprite.update(delta); //update sprite
+                y -= delta * 0.2f; //update position of delta distance (higher delta = faster moving)
+            }
+        }
+        else if (input.isKeyDown(Input.KEY_DOWN))
+        {
+            sprite = down;
+            if (!isBlocked(x, y + SIZE + delta * 0.2f))
+            {
+                sprite.update(delta);
+                y += delta * 0.2f;
+            }
+        }
+        else if (input.isKeyDown(Input.KEY_LEFT))
+        {
+            sprite = left;
+            if (!isBlocked(x - delta * 0.2f, y))
+            {
+                sprite.update(delta);
+                x -= delta * 0.2f;
+            }
+        }
+        else if (input.isKeyDown(Input.KEY_RIGHT))
+        {
+            sprite = right;
+            if (!isBlocked(x + SIZE + delta * 0.2f, y))
+            {
+                sprite.update(delta);
+                x += delta * 0.2f;
+            }
+        }        
     }
  
     //Render values (need to override)
@@ -102,5 +131,12 @@ public class GarbageRobot extends BasicGame
     {
     	map.render(10, 15); //position of content render relative to window
     	sprite.draw((int)x, (int)y);
+    }
+    
+    private boolean isBlocked(float x, float y)
+    {
+         int xBlock = (int)x / SIZE;
+         int yBlock = (int)y / SIZE;
+         return blocked[xBlock][yBlock];
     }
 }
