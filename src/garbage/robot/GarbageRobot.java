@@ -18,6 +18,8 @@ public class GarbageRobot extends BasicGame
 	private float x = 64f, y = 64f; //initial position of main sprite
 	private boolean[][] blocked; //array of map's squares (blocked property)
 	private static final int SIZE = 32; 
+	private int points = 0;
+	Image money;
 	
     public GarbageRobot()
     {
@@ -33,6 +35,7 @@ public class GarbageRobot extends BasicGame
         	//set AppGameConteiner and start it
             AppGameContainer app = new AppGameContainer(new GarbageRobot());
             app.setDisplayMode(1050, 800, false);
+            app.setShowFPS(false);
             app.start();
         }
         catch (SlickException e)
@@ -78,6 +81,8 @@ public class GarbageRobot extends BasicGame
     	        }
     	    }
     	 }
+    	
+    	money = new Image("data/money.png");
     }
  
     //Update values (need to override)
@@ -123,7 +128,7 @@ public class GarbageRobot extends BasicGame
                 sprite.update(delta);
                 x += delta * 0.2f;
             }
-        }        
+        }      
     }
  
     //Render values (need to override)
@@ -131,6 +136,13 @@ public class GarbageRobot extends BasicGame
     {
     	map.render(10, 15); //position of content render relative to window
     	sprite.draw((int)x, (int)y);
+    	g.drawString("POINTS: " + points, 20f, 30f);
+    	g.drawString("ROBOT", x-10f, y-20f);
+    	//money.draw(200f, 100f);
+    	//money.draw(200f, 200f);
+    	//g.drawImage(money, 200f, 50f);
+    	//g.drawImage(money, 400f, 50f);
+    	//g.flush();
     }
     
     private boolean isBlocked(float x, float y)
