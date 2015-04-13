@@ -1,5 +1,7 @@
 package garbage.robot;
  
+import java.util.Random;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -17,9 +19,12 @@ public class GarbageRobot extends BasicGame
 	private Animation sprite, up, down, left, right; //sprites
 	private float x = 64f, y = 64f; //initial position of main sprite
 	private boolean[][] blocked; //array of map's squares (blocked property)
-	private static final int SIZE = 32; 
-	private int points = 0;
-	Image money;
+	private static final int SIZE = 32; //size of texture
+	
+	private int points = 0; //points to collect money
+	Image money; //money image
+	float moneyX = 400f; //X axis image
+	float moneyY = 50f; //Y axis image
 	
     public GarbageRobot()
     {
@@ -82,6 +87,7 @@ public class GarbageRobot extends BasicGame
     	    }
     	 }
     	
+    	//init money as Image
     	money = new Image("data/money.png");
     }
  
@@ -100,6 +106,7 @@ public class GarbageRobot extends BasicGame
             {
                 sprite.update(delta); //update sprite
                 y -= delta * 0.2f; //update position of delta distance (higher delta = faster moving)
+                isMoney(x, y);
             }
         }
         else if (input.isKeyDown(Input.KEY_DOWN))
@@ -109,6 +116,7 @@ public class GarbageRobot extends BasicGame
             {
                 sprite.update(delta);
                 y += delta * 0.2f;
+                isMoney(x, y);
             }
         }
         else if (input.isKeyDown(Input.KEY_LEFT))
@@ -118,6 +126,7 @@ public class GarbageRobot extends BasicGame
             {
                 sprite.update(delta);
                 x -= delta * 0.2f;
+                isMoney(x, y);
             }
         }
         else if (input.isKeyDown(Input.KEY_RIGHT))
@@ -127,6 +136,7 @@ public class GarbageRobot extends BasicGame
             {
                 sprite.update(delta);
                 x += delta * 0.2f;
+                isMoney(x, y);
             }
         }      
     }
@@ -138,17 +148,26 @@ public class GarbageRobot extends BasicGame
     	sprite.draw((int)x, (int)y);
     	g.drawString("POINTS: " + points, 20f, 30f);
     	g.drawString("ROBOT", x-10f, y-20f);
-    	//money.draw(200f, 100f);
-    	//money.draw(200f, 200f);
-    	//g.drawImage(money, 200f, 50f);
-    	//g.drawImage(money, 400f, 50f);
-    	//g.flush();
+    	g.drawImage(money, moneyX, moneyY); //update image if it has changed position
     }
     
+    //check if robot is on block position
     private boolean isBlocked(float x, float y)
     {
          int xBlock = (int)x / SIZE;
          int yBlock = (int)y / SIZE;
          return blocked[xBlock][yBlock];
+    }
+    
+    //check if robot is on money position
+    private void isMoney(float x, float y)
+    {
+    	if(x > moneyX - 10f && x < moneyX + 10f && y > moneyY - 10f  && y < moneyY + 10f)
+    	{
+    		points += 1;
+    		Random rand = new Random();
+    		moneyX = rand.nextFloat() * (1000f - 100f) + 100f;
+    		moneyY = rand.nextFloat() * (700f - 100f) + 100f;
+    	}
     }
 }
