@@ -23,8 +23,11 @@ public class GarbageRobot extends BasicGame
 	
 	private int points = 0; //points to collect money
 	Image money; //money image
+	Image coin; //coin image
 	float moneyX = 400f; //X axis image
 	float moneyY = 50f; //Y axis image
+	float coinX = 200f; //X axis image
+	float coinY = 300f; //Y axis image
 	
     public GarbageRobot()
     {
@@ -87,8 +90,9 @@ public class GarbageRobot extends BasicGame
     	    }
     	 }
     	
-    	//init money as Image
+    	//init money and coin as Image
     	money = new Image("data/money.png");
+    	coin = new Image("data/coin.png");
     }
  
     //Update values (need to override)
@@ -148,7 +152,10 @@ public class GarbageRobot extends BasicGame
     	sprite.draw((int)x, (int)y);
     	g.drawString("POINTS: " + points, 20f, 30f);
     	g.drawString("ROBOT", x-10f, y-20f);
-    	g.drawImage(money, moneyX, moneyY); //update image if it has changed position
+    	
+    	//update images if it has changed position
+    	g.drawImage(money, moneyX, moneyY); 
+    	g.drawImage(coin, coinX, coinY); 
     }
     
     //check if robot is on block position
@@ -164,10 +171,18 @@ public class GarbageRobot extends BasicGame
     {
     	if(x > moneyX - 10f && x < moneyX + 10f && y > moneyY - 10f  && y < moneyY + 10f)
     	{
-    		points += 1;
+    		points += 5;
     		Random rand = new Random();
     		moneyX = rand.nextFloat() * (1000f - 100f) + 100f;
     		moneyY = rand.nextFloat() * (700f - 100f) + 100f;
+    	}
+    	
+    	if(x > coinX - 10f && x < coinX + 10f && y > coinY - 10f  && y < coinY + 10f)
+    	{
+    		points += 1;
+    		Random rand = new Random();
+    		coinX = rand.nextFloat() * (1000f - 100f) + 100f;
+    		coinY = rand.nextFloat() * (700f - 100f) + 100f;
     	}
     }
 }
