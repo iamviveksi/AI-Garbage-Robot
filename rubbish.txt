@@ -1,9 +1,9 @@
 1. Wilgotnosc - od 0 do 100
 2. Intensywnosc koloru - od 0 do 100
 3. Intensywnosc zapachu - od 0 do 100
-4. Czy siê klei - TAK lub NIE
-5.
-6.
+4. Czy sie klei - TAK lub NIE
+5. Rozmiar - 1 - ? (int)
+6. Czy zaschnieta - TAK lub NIE
 7.
 8.
 9.
