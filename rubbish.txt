@@ -4,8 +4,8 @@
 4. Czy sie klei - TAK lub NIE
 5. Rozmiar - 1 - ? (int)
 6. Czy zaschnieta - TAK lub NIE
-7.
-8.
+7. Czy tlusta - TAK lub NIE
+8. Miekkosc - od 0 do 100
 9.
 10.
 11.

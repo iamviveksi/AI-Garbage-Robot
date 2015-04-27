@@ -7,16 +7,25 @@ public class FieldOnMap {
 	private boolean isSticky;
 	private int size;
 	private boolean isDried;
+	private boolean isGreasy;
+	private int softness;
+	
+	
+	//constructor
 	public FieldOnMap(int wetness, int colorIntensity, int smellIntensity,
-			boolean isSticky, int size, boolean isDried) {
-		super();
+			boolean isSticky, int size, boolean isDried, boolean isGreasy,
+			int softness) {
 		this.wetness = wetness;
 		this.colorIntensity = colorIntensity;
 		this.smellIntensity = smellIntensity;
 		this.isSticky = isSticky;
 		this.size = size;
 		this.isDried = isDried;
+		this.isGreasy = isGreasy;
+		this.softness = softness;
 	}
+	
+	//getters and setters
 	public int getWetness() {
 		return wetness;
 	}
@@ -53,6 +62,19 @@ public class FieldOnMap {
 	public void setDried(boolean isDried) {
 		this.isDried = isDried;
 	}
+	public boolean isGreasy() {
+		return isGreasy;
+	}
+	public void setGreasy(boolean isGreasy) {
+		this.isGreasy = isGreasy;
+	}
+	public int getSoftness() {
+		return softness;
+	}
+	public void setSoftness(int softness) {
+		this.softness = softness;
+	}
+	
 	
 	
 }
