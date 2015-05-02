@@ -20,17 +20,17 @@ public class GarbageRobot extends BasicGame {
 	private Image obstacle;
 	private Animation sprite, up, down, left, right; //sprites
 	private static final int TILE_SIZE = 32;
-	private final int STEP = 2;
+	private final float STEP =  0.5f;
 	private static int tilesX;
 	private static int tilesY;
 	private static char[][] mapTab;
 	private int xMap = 4;
 	private int yMap = 4;
-	private int xDisp;
-	private int yDisp;
+	private float xDisp;
+	private float yDisp;
 
-	private int shiftY = 0;
-	private int shiftX = 0;
+	private float shiftY = 0;
+	private float shiftX = 0;
 
 
 	public GarbageRobot() {
@@ -90,7 +90,7 @@ public class GarbageRobot extends BasicGame {
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-		// TODO Auto-generated method stub
+
 		floor = new Image("data/grass.png");
 		obstacle = new Image("data/smallRocks.png");
 	//	pamperek = new Image("data/wmg1_fr1.png");
