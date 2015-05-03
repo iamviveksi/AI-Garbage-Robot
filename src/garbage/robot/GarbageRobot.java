@@ -1,6 +1,8 @@
 package garbage.robot;
 
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
@@ -11,16 +13,14 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-
 //need to extend BasicGame
 
 public class GarbageRobot extends BasicGame {
 	private Image floor;
-//	private Image pamperek;
 	private Image obstacle;
-	private Animation sprite, up, down, left, right; //sprites
+	private Animation sprite, up, down, left, right; // sprites
 	private static final int TILE_SIZE = 32;
-	private final float STEP =  0.5f;
+	private final float STEP = 0.5f;
 	private static int tilesX;
 	private static int tilesY;
 	private static char[][] mapTab;
@@ -28,10 +28,11 @@ public class GarbageRobot extends BasicGame {
 	private int yMap = 4;
 	private float xDisp;
 	private float yDisp;
-
 	private float shiftY = 0;
 	private float shiftX = 0;
-
+	private Image stainPic;
+	private static int numberOfStains;
+	private static List<Stain> stainList;
 
 	public GarbageRobot() {
 		// text in the main window
@@ -42,6 +43,13 @@ public class GarbageRobot extends BasicGame {
 	public static void main(String[] arguments) {
 
 		readMapFromFile();
+		generateStains();
+		for (int i = 0; i < tilesY; i++) {
+			for (int j = 0; j < tilesX; j++) {
+				System.out.print(mapTab[i][j] + " ");
+			}
+			System.out.println();
+		}
 
 		try {
 			// set AppGameConteiner and start it
@@ -54,35 +62,63 @@ public class GarbageRobot extends BasicGame {
 		}
 	}
 
+	public static void generateStains() {
+		Stain tempStain;
+		stainList = new ArrayList<Stain>();
+		int xStain, yStain;
+		boolean isOk = false;
+		Random generator = new Random();
+		for (int i = 1; i <= numberOfStains; i++) {
+			isOk = false;
+			while (!isOk) {
+				xStain = generator.nextInt(tilesX);
+				yStain = generator.nextInt(tilesY);
+				if (mapTab[yStain][xStain] != '1') {
+					mapTab[yStain][xStain] = 'S';
+					isOk = true;
+				}
+				tempStain = new Stain();
+				tempStain.setxPos(xStain);
+				tempStain.setyPos(yStain);
+				stainList.add(tempStain);
+			}
+		}
+	}
+
 	public static void readMapFromFile() {
 		PropertiesSupport propertiesSupport = new PropertiesSupport();
 		propertiesSupport.load();
-		tilesX = Integer.parseInt(propertiesSupport.getProperty("mapa_x"));
-		tilesY = Integer.parseInt(propertiesSupport.getProperty("mapa_y"));
+		tilesX = Integer.parseInt(propertiesSupport.getProperty("map_x"));
+		tilesY = Integer.parseInt(propertiesSupport.getProperty("map_y"));
+		numberOfStains = Integer.parseInt(propertiesSupport
+				.getProperty("stainsOnRoom"));
 		MapReader mapReader = new MapReader(tilesX, tilesY);
-		mapReader.loadMapFromFile(propertiesSupport.getProperty("mapa_plik"));
+		mapReader.loadMapFromFile(propertiesSupport.getProperty("map_path"));
+
 		mapTab = mapReader.getMapTab();
-		
 	}
 
 	@Override
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
-	 	// floor
-		
-			
+		// floor
+
 		for (int i = 0; i < 1024; i += 128)
 			for (int j = 0; j < 640; j += 128)
 				g.drawImage(floor, i, j);
-		
+
 		for (int i = 0; i < tilesX; i++)
 			for (int j = 0; j < tilesY; j++) {
 				if (mapTab[j][i] == '1') {
 					g.drawImage(obstacle, i * 32, j * 32);
 				}
+				if (mapTab[j][i] == 'S') {
+					g.drawImage(stainPic, i * 32, j * 32);
+				}
+				 
 			}
-		//g.drawImage(pamperek, xDisp, yDisp);
-		//System.out.println(xDisp + "  " + yDisp);
+		// g.drawImage(pamperek, xDisp, yDisp);
+		// System.out.println(xDisp + "  " + yDisp);
 		g.drawString("PosX: " + xDisp, 10f, 30f);
 		g.drawString("PosY: " + yDisp, 10f, 50f);
 		sprite.draw(xDisp, yDisp);
@@ -93,35 +129,40 @@ public class GarbageRobot extends BasicGame {
 
 		floor = new Image("data/grass.png");
 		obstacle = new Image("data/smallRocks.png");
-	//	pamperek = new Image("data/wmg1_fr1.png");
-		mapTab[yMap][xMap] = 2;
+		stainPic = new Image("data/stain.png");
+		// mapTab[yMap][xMap] = 2;
 		xDisp = 32 * xMap;
 		yDisp = 32 * yMap;
-		Image [] movementUp = {new Image("data/wmg1_bk1.png"), new Image("data/wmg1_bk2.png")};
-    	Image [] movementDown = {new Image("data/wmg1_fr1.png"), new Image("data/wmg1_fr2.png")};
-    	Image [] movementLeft = {new Image("data/wmg1_lf1.png"), new Image("data/wmg1_lf2.png")};
-    	Image [] movementRight = {new Image("data/wmg1_rt1.png"), new Image("data/wmg1_rt2.png")};
-    	
-    	//draw image1 every 100ms and image2 every 100ms too
-    	int [] duration = {100, 100};
-    	
-    	//set sprites (images, durations, auto-manual-mode-refreshing)
-    	up = new Animation(movementUp, duration, false);
-    	down = new Animation(movementDown, duration, false);
-    	left = new Animation(movementLeft, duration, false);
-    	right = new Animation(movementRight, duration, false); 
-    	sprite = down; //main orientation  	
+		Image[] movementUp = { new Image("data/wmg1_bk1.png"),
+				new Image("data/wmg1_bk2.png") };
+		Image[] movementDown = { new Image("data/wmg1_fr1.png"),
+				new Image("data/wmg1_fr2.png") };
+		Image[] movementLeft = { new Image("data/wmg1_lf1.png"),
+				new Image("data/wmg1_lf2.png") };
+		Image[] movementRight = { new Image("data/wmg1_rt1.png"),
+				new Image("data/wmg1_rt2.png") };
+
+		// draw image1 every 100ms and image2 every 100ms too
+		int[] duration = { 100, 100 };
+
+		// set sprites (images, durations, auto-manual-mode-refreshing)
+		up = new Animation(movementUp, duration, false);
+		down = new Animation(movementDown, duration, false);
+		left = new Animation(movementLeft, duration, false);
+		right = new Animation(movementRight, duration, false);
+		sprite = down; // main orientation
 	}
 
 	@Override
-	public void update(GameContainer container, int delta) throws SlickException {
+	public void update(GameContainer container, int delta)
+			throws SlickException {
 		Input input = container.getInput();
-		if (input.isKeyDown(Input.KEY_UP) && !(mapTab[yMap-1][xMap] == '1')) {
-			sprite = up; //set sprite
+		if (input.isKeyDown(Input.KEY_UP) && !(mapTab[yMap - 1][xMap] == '1')) {
+			sprite = up; // set sprite
 			sprite.update(delta);
 			shiftY -= STEP;
 			xDisp = xMap * TILE_SIZE;
-			yDisp = yMap * TILE_SIZE +shiftY;
+			yDisp = yMap * TILE_SIZE + shiftY;
 			if (shiftY <= (-1 * TILE_SIZE)) {
 				shiftY = 0;
 				mapTab[yMap][xMap] = '0';
@@ -129,51 +170,57 @@ public class GarbageRobot extends BasicGame {
 				mapTab[yMap][xMap] = '2';
 			}
 
-		} else if (input.isKeyDown(Input.KEY_DOWN) && !(mapTab[yMap+1][xMap] == '1'))  {
+		} else if (input.isKeyDown(Input.KEY_DOWN)) {
 			sprite = down;
 			sprite.update(delta);
-			shiftY += STEP;
-			xDisp = xMap * TILE_SIZE;
-			yDisp = yMap * TILE_SIZE + shiftY;
-			if (shiftY >= TILE_SIZE) {
-				shiftY = 0;
-				mapTab[yMap][xMap] = '0';
-				yMap = yMap + 1;
-				mapTab[yMap][xMap] = '2';
+			if (!(mapTab[yMap + 1][xMap] == '1')) {
+				shiftY += STEP;
+				xDisp = xMap * TILE_SIZE;
+				yDisp = yMap * TILE_SIZE + shiftY;
+				if (shiftY >= TILE_SIZE) {
+					shiftY = 0;
+					mapTab[yMap][xMap] = '0';
+					yMap = yMap + 1;
+					mapTab[yMap][xMap] = '2';
+				}
 			}
 
-		} else if (input.isKeyDown(Input.KEY_LEFT) && !(mapTab[yMap][xMap-1] == '1')) {
+		} else if (input.isKeyDown(Input.KEY_LEFT)) {
 			sprite = left;
 			sprite.update(delta);
-			shiftX -= STEP;
-			xDisp = xMap * TILE_SIZE + shiftX;
-			yDisp = yMap * TILE_SIZE;
-			if (shiftX <= (-1 * TILE_SIZE)) {
-				shiftX = 0;
-				mapTab[yMap][xMap] = '0';
-				xMap = xMap - 1;
-				mapTab[yMap][xMap] = '2';
+			if (!(mapTab[yMap][xMap - 1] == '1')) {
+				shiftX -= STEP;
+				xDisp = xMap * TILE_SIZE + shiftX;
+				yDisp = yMap * TILE_SIZE;
+				if (shiftX <= (-1 * TILE_SIZE)) {
+					shiftX = 0;
+					mapTab[yMap][xMap] = '0';
+					xMap = xMap - 1;
+					mapTab[yMap][xMap] = '2';
+				}
 			}
-		} else if (input.isKeyDown(Input.KEY_RIGHT)&& !(mapTab[yMap][xMap+1] == '1')) {
+		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
 			sprite = right;
 			sprite.update(delta);
-			shiftX += STEP;
-			xDisp = xMap * TILE_SIZE + shiftX;
-			yDisp = yMap * TILE_SIZE;
-			if (shiftX >= TILE_SIZE) {
-				shiftX = 0;
-				mapTab[yMap][xMap] = '0';
-				xMap = xMap + 1;
-				mapTab[yMap][xMap] = '2';
+			if (!(mapTab[yMap][xMap + 1] == '1')) {
+				shiftX += STEP;
+				xDisp = xMap * TILE_SIZE + shiftX;
+				yDisp = yMap * TILE_SIZE;
+				if (shiftX >= TILE_SIZE) {
+					shiftX = 0;
+					mapTab[yMap][xMap] = '0';
+					xMap = xMap + 1;
+					mapTab[yMap][xMap] = '2';
+				}
 			}
 		} else {
-			if(shiftX != 0){
+			if (shiftX != 0) {
 				xDisp = xDisp - shiftX;
-				shiftX=0;
+				shiftX = 0;
 			}
-			if(shiftY != 0){
+			if (shiftY != 0) {
 				yDisp = yDisp - shiftY;
-				shiftY=0;
+				shiftY = 0;
 			}
 		}
 

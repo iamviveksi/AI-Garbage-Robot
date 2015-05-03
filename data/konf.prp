@@ -1,3 +1,4 @@
-mapa_x=32
-mapa_y=20
-mapa_plik=data/mapa.txt
+map_x=32
+map_y=20
+map_path=data/mapa.txt
+stainsOnRoom=5
