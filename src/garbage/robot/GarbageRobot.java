@@ -44,12 +44,6 @@ public class GarbageRobot extends BasicGame {
 
 		readMapFromFile();
 		generateStains();
-		for (int i = 0; i < tilesY; i++) {
-			for (int j = 0; j < tilesX; j++) {
-				System.out.print(mapTab[i][j] + " ");
-			}
-			System.out.println();
-		}
 
 		try {
 			// set AppGameConteiner and start it
@@ -61,7 +55,7 @@ public class GarbageRobot extends BasicGame {
 			e.printStackTrace();
 		}
 	}
-
+	// method put stains on room.
 	public static void generateStains() {
 		Stain tempStain;
 		stainList = new ArrayList<Stain>();
@@ -85,7 +79,7 @@ public class GarbageRobot extends BasicGame {
 			}
 		}
 	}
-
+	//method read params from conf.prp and map from file
 	public static void readMapFromFile() {
 		PropertiesSupport propertiesSupport = new PropertiesSupport();
 		propertiesSupport.load();
@@ -98,7 +92,7 @@ public class GarbageRobot extends BasicGame {
 
 		mapTab = mapReader.getMapTab();
 	}
-
+	//method draw elements on screen
 	@Override
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
@@ -167,7 +161,7 @@ public class GarbageRobot extends BasicGame {
 		right = new Animation(movementRight, duration, false);
 		sprite = down; // main orientation
 	}
-
+	//method update needed informations
 	@Override
 	public void update(GameContainer container, int delta)
 			throws SlickException {
@@ -239,7 +233,7 @@ public class GarbageRobot extends BasicGame {
 			}
 		}
 	}
-
+	//method returns Stain by position.
 	private Stain getStainByPosition(int xPos, int yPos) {
 		Stain ret = null;
 		for (Stain stain : stainList) {

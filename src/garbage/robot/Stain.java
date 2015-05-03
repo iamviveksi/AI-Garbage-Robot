@@ -22,11 +22,6 @@ public class Stain {
 	
 	//constructor
 	
-	
-	//getters and setters
-	public int getWetness() {
-		return wetness;
-	}
 	public Stain(){
 		drawParams();
 	}
@@ -53,7 +48,7 @@ public class Stain {
 		this.density = density;
 	}
 	
-	
+	//method draw params for pain
 	private void drawParams(){
 		Random generator = new Random();
 		this.wetness = generator.nextInt(100);
@@ -82,6 +77,11 @@ public class Stain {
 				+ ", dangerousBacteries=" + dangerousBacteries + ", height="
 				+ height + ", isFruity=" + isFruity + ", density=" + density
 				+ "]";
+	}
+	
+	//getters and setters
+	public int getWetness() {
+		return wetness;
 	}
 	public void setWetness(int wetness) {
 		this.wetness = wetness;

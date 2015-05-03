@@ -1,4 +1,4 @@
 map_x=32
 map_y=20
-map_path=data/mapa.txt
+map_path=data/map.txt
 stainsOnRoom=5
