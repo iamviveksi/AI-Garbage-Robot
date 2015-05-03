@@ -11,6 +11,7 @@
 10. Wysokość - 1 - ? (int) *w przypadku, kiedy stan skupienia to ciało stałe lub proszek*
 11. Obecność groźnych bakterii - od 0 do 100 *można ustalić wartość, od której jest potrzeba dezynfekcji*
 12. Owocowość - TAK lub NIE *dla plam - determinuje konieczność użycia silnych detergentów*
+13. Gęstość - od 0 do 100
 
 ####Spostrzeżenia, reguły
 1. Plama może być mokra i sucha, zatem rozpatrywałbym ją jako ciecz lub ciało stałe

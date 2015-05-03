@@ -73,7 +73,8 @@ public class GarbageRobot extends BasicGame {
 			while (!isOk) {
 				xStain = generator.nextInt(tilesX);
 				yStain = generator.nextInt(tilesY);
-				if (mapTab[yStain][xStain] != '1') {
+				if (mapTab[yStain][xStain] != '1'
+						&& mapTab[yStain][xStain] != 'S') {
 					mapTab[yStain][xStain] = 'S';
 					isOk = true;
 				}
@@ -115,13 +116,27 @@ public class GarbageRobot extends BasicGame {
 				if (mapTab[j][i] == 'S') {
 					g.drawImage(stainPic, i * 32, j * 32);
 				}
-				 
 			}
-		// g.drawImage(pamperek, xDisp, yDisp);
-		// System.out.println(xDisp + "  " + yDisp);
+		sprite.draw(xDisp, yDisp);
+		
 		g.drawString("PosX: " + xDisp, 10f, 30f);
 		g.drawString("PosY: " + yDisp, 10f, 50f);
-		sprite.draw(xDisp, yDisp);
+		g.drawString("-------------", 10f, 70f);
+		if(mapTab[yMap][xMap] == 'S'){
+			Stain actStain = getStainByPosition(xMap, yMap);
+			g.drawString("Wetness: " + actStain.getWetness() , 10f, 90f);
+			g.drawString("ColorIntensity: " + actStain.getColorIntensity(), 10f, 110f);
+			g.drawString("SmellIntensity: " + actStain.getSmellIntensity() , 10f, 130f);
+			g.drawString("Is Sticky?: " + actStain.isSticky(), 10f, 150f);
+			g.drawString("Size: " + actStain.getSize() , 10f, 170f);
+			g.drawString("Is Dried?: " + actStain.isDried(), 10f, 190f);
+			g.drawString("Is Greasy?: " + actStain.isGreasy() , 10f, 210f);
+			g.drawString("Softness: " + actStain.getSoftness(), 10f, 230f);
+			g.drawString("Dangerous Bacteries: " + actStain.getDangerousBacteries(), 10f, 250f);
+			g.drawString("Height: " + actStain.getHeight() , 10f, 270f);
+			g.drawString("Is Fruity?: " + actStain.isFruity(), 10f, 290f);
+			g.drawString("Density: " + actStain.getDensity(), 10f, 310f);
+		}		
 	}
 
 	@Override
@@ -165,9 +180,9 @@ public class GarbageRobot extends BasicGame {
 			yDisp = yMap * TILE_SIZE + shiftY;
 			if (shiftY <= (-1 * TILE_SIZE)) {
 				shiftY = 0;
-				mapTab[yMap][xMap] = '0';
+				//mapTab[yMap][xMap] = '0';
 				yMap = yMap - 1;
-				mapTab[yMap][xMap] = '2';
+				//mapTab[yMap][xMap] = '2';
 			}
 
 		} else if (input.isKeyDown(Input.KEY_DOWN)) {
@@ -179,9 +194,9 @@ public class GarbageRobot extends BasicGame {
 				yDisp = yMap * TILE_SIZE + shiftY;
 				if (shiftY >= TILE_SIZE) {
 					shiftY = 0;
-					mapTab[yMap][xMap] = '0';
+					//mapTab[yMap][xMap] = '0';
 					yMap = yMap + 1;
-					mapTab[yMap][xMap] = '2';
+				//	mapTab[yMap][xMap] = '2';
 				}
 			}
 
@@ -194,9 +209,9 @@ public class GarbageRobot extends BasicGame {
 				yDisp = yMap * TILE_SIZE;
 				if (shiftX <= (-1 * TILE_SIZE)) {
 					shiftX = 0;
-					mapTab[yMap][xMap] = '0';
+					//mapTab[yMap][xMap] = '0';
 					xMap = xMap - 1;
-					mapTab[yMap][xMap] = '2';
+					//mapTab[yMap][xMap] = '2';
 				}
 			}
 		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
@@ -208,9 +223,9 @@ public class GarbageRobot extends BasicGame {
 				yDisp = yMap * TILE_SIZE;
 				if (shiftX >= TILE_SIZE) {
 					shiftX = 0;
-					mapTab[yMap][xMap] = '0';
+					//mapTab[yMap][xMap] = '0';
 					xMap = xMap + 1;
-					mapTab[yMap][xMap] = '2';
+				//	mapTab[yMap][xMap] = '2';
 				}
 			}
 		} else {
@@ -223,6 +238,16 @@ public class GarbageRobot extends BasicGame {
 				shiftY = 0;
 			}
 		}
-
 	}
+
+	private Stain getStainByPosition(int xPos, int yPos) {
+		Stain ret = null;
+		for (Stain stain : stainList) {
+			if (stain.getxPos() == xPos && stain.getyPos() == yPos) {
+				ret = stain;
+			}
+		}
+		return ret;
+	}
+
 }

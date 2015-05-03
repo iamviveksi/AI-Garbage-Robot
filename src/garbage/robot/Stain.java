@@ -16,6 +16,7 @@ public class Stain {
 	private int dangerousBacteries;
 	private int height;
 	private boolean isFruity;
+	private int density;
 	
 	
 	
@@ -34,7 +35,7 @@ public class Stain {
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
 			boolean isGreasy, int softness, int dangerousBacteries, int height,
-			boolean isFruity) {
+			boolean isFruity, int density) {
 		super();
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -49,6 +50,7 @@ public class Stain {
 		this.dangerousBacteries = dangerousBacteries;
 		this.height = height;
 		this.isFruity = isFruity;
+		this.density = density;
 	}
 	
 	
@@ -65,10 +67,10 @@ public class Stain {
 		this.dangerousBacteries =  generator.nextInt(100);
 		this.height =  generator.nextInt(100);
 		this.isFruity = generator.nextBoolean();
+		this.density = generator.nextInt(100);
 	}
 	
-	
-	
+
 	
 	@Override
 	public String toString() {
@@ -78,7 +80,8 @@ public class Stain {
 				+ isSticky + ", size=" + size + ", isDried=" + isDried
 				+ ", isGreasy=" + isGreasy + ", softness=" + softness
 				+ ", dangerousBacteries=" + dangerousBacteries + ", height="
-				+ height + ", isFruity=" + isFruity + "]";
+				+ height + ", isFruity=" + isFruity + ", density=" + density
+				+ "]";
 	}
 	public void setWetness(int wetness) {
 		this.wetness = wetness;
@@ -106,6 +109,13 @@ public class Stain {
 	}
 	public void setSize(int size) {
 		this.size = size;
+	}
+	
+	public int getDensity() {
+		return density;
+	}
+	public void setDensity(int density) {
+		this.density = density;
 	}
 	public boolean isDried() {
 		return isDried;
