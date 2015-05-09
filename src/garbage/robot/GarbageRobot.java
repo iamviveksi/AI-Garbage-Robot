@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -18,16 +17,14 @@ import org.newdawn.slick.SlickException;
 public class GarbageRobot extends BasicGame {
 	private Image floor;
 	private Image obstacle;
-	private Animation sprite, up, down, left, right; // sprites
+	private static Sprite robot;
+	
 	private static final int TILE_SIZE = 32;
-	private static float stepVal;
+	
 	private static int tilesX;
 	private static int tilesY;
 	private static char[][] mapTab;
-	private int xMap = 4;
-	private int yMap = 4;
-	private float xDisp;
-	private float yDisp;
+	
 	private float shiftY = 0;
 	private float shiftX = 0;
 	private Image stainPic;
@@ -41,6 +38,7 @@ public class GarbageRobot extends BasicGame {
 
 	// start the GAME!
 	public static void main(String[] arguments) {
+		robot = new Sprite();
 
 		readMapFromFile();
 		generateStains();
@@ -87,7 +85,7 @@ public class GarbageRobot extends BasicGame {
 		propertiesSupport.load();
 		tilesX = Integer.parseInt(propertiesSupport.getProperty("map_x"));
 		tilesY = Integer.parseInt(propertiesSupport.getProperty("map_y"));
-		stepVal = Float.parseFloat(propertiesSupport.getProperty("stepVal"));
+		robot.setStepVal(Float.parseFloat(propertiesSupport.getProperty("stepVal"))); 
 		numberOfStains = Integer.parseInt(propertiesSupport
 				.getProperty("stainsOnRoom"));
 		MapReader mapReader = new MapReader(tilesX, tilesY);
@@ -115,13 +113,16 @@ public class GarbageRobot extends BasicGame {
 					g.drawImage(stainPic, i * 32, j * 32);
 				}
 			}
-		sprite.draw(xDisp, yDisp);
+		robot.getSprite();
+		robot.getXDisp();
+		robot.getYDisp();
+		robot.getSprite().draw(robot.getXDisp(), robot.getYDisp());
 
-		g.drawString("PosX: " + xDisp, 10f, 30f);
-		g.drawString("PosY: " + yDisp, 10f, 50f);
+		g.drawString("PosX: " + robot.getXDisp(), 10f, 30f);
+		g.drawString("PosY: " + robot.getYDisp(), 10f, 50f);
 		g.drawString("-------------", 10f, 70f);
-		if (mapTab[yMap][xMap] == 'S') {
-			Stain actStain = getStainByPosition(xMap, yMap);
+		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
+			Stain actStain = getStainByPosition(robot.getXMap(), robot.getYMap());
 			g.drawString("Wetness: " + actStain.getWetness(), 10f, 90f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
 					10f, 110f);
@@ -143,31 +144,12 @@ public class GarbageRobot extends BasicGame {
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-
+		System.err.println("INIT");
+		robot.init(4, 4);
 		floor = new Image("data/grass.png");
 		obstacle = new Image("data/smallRocks.png");
 		stainPic = new Image("data/stain.png");
 		// mapTab[yMap][xMap] = 2;
-		xDisp = 32 * xMap;
-		yDisp = 32 * yMap;
-		Image[] movementUp = { new Image("data/wmg1_bk1.png"),
-				new Image("data/wmg1_bk2.png") };
-		Image[] movementDown = { new Image("data/wmg1_fr1.png"),
-				new Image("data/wmg1_fr2.png") };
-		Image[] movementLeft = { new Image("data/wmg1_lf1.png"),
-				new Image("data/wmg1_lf2.png") };
-		Image[] movementRight = { new Image("data/wmg1_rt1.png"),
-				new Image("data/wmg1_rt2.png") };
-
-		// draw image1 every 100ms and image2 every 100ms too
-		int[] duration = { 100, 100 };
-
-		// set sprites (images, durations, auto-manual-mode-refreshing)
-		up = new Animation(movementUp, duration, false);
-		down = new Animation(movementDown, duration, false);
-		left = new Animation(movementLeft, duration, false);
-		right = new Animation(movementRight, duration, false);
-		sprite = down; // main orientation
 	}
 
 	// method update needed informations
@@ -176,70 +158,70 @@ public class GarbageRobot extends BasicGame {
 			throws SlickException {
 		Input input = container.getInput();
 		if (input.isKeyDown(Input.KEY_UP)) {
-			sprite = up; // set sprite
-			sprite.update(delta);
-			if (!(mapTab[yMap - 1][xMap] == '1')) {
-				shiftY -= stepVal;
-				xDisp = xMap * TILE_SIZE;
-				yDisp = yMap * TILE_SIZE + shiftY;
+			robot.setSpriteUp();// set sprite
+			robot.getSprite().update(delta);
+			if (!(mapTab[robot.getYMap() - 1][robot.getXMap()] == '1')) {
+				shiftY -= robot.getStepVal();
+				robot.setxDisp(robot.getXMap() * TILE_SIZE); 
+				robot.setyDisp(robot.getYMap() * TILE_SIZE + shiftY);
 				if (shiftY <= (-1 * TILE_SIZE)) {
 					shiftY = 0;
 					// mapTab[yMap][xMap] = '0';
-					yMap = yMap - 1;
+					robot.setyMap(robot.getYMap() - 1); 
 					// mapTab[yMap][xMap] = '2';
 				}
 			}
 
 		} else if (input.isKeyDown(Input.KEY_DOWN)) {
-			sprite = down;
-			sprite.update(delta);
-			if (!(mapTab[yMap + 1][xMap] == '1')) {
-				shiftY += stepVal;
-				xDisp = xMap * TILE_SIZE;
-				yDisp = yMap * TILE_SIZE + shiftY;
+			robot.setSpriteDown();
+			robot.getSprite().update(delta);
+			if (!(mapTab[robot.getYMap() + 1][robot.getXMap()] == '1')) {
+				shiftY += robot.getStepVal();
+				robot.setxDisp(robot.getXMap()*TILE_SIZE);
+				robot.setyDisp(robot.getYMap()* TILE_SIZE + shiftY);
 				if (shiftY >= TILE_SIZE) {
 					shiftY = 0;
 					// mapTab[yMap][xMap] = '0';
-					yMap = yMap + 1;
+					robot.setyMap(robot.getYMap() + 1);
 					// mapTab[yMap][xMap] = '2';
 				}
 			}
 
 		} else if (input.isKeyDown(Input.KEY_LEFT)) {
-			sprite = left;
-			sprite.update(delta);
-			if (!(mapTab[yMap][xMap - 1] == '1')) {
-				shiftX -= stepVal;
-				xDisp = xMap * TILE_SIZE + shiftX;
-				yDisp = yMap * TILE_SIZE;
+			robot.setSpriteLeft();
+			robot.getSprite().update(delta);
+			if (!(mapTab[robot.getYMap()][robot.getXMap() - 1] == '1')) {
+				shiftX -= robot.getStepVal();
+				robot.setxDisp(robot.getXMap() * TILE_SIZE + shiftX);
+				robot.setyDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX <= (-1 * TILE_SIZE)) {
 					shiftX = 0;
 					// mapTab[yMap][xMap] = '0';
-					xMap = xMap - 1;
+					robot.setxMap(robot.getXMap() - 1);
 					// mapTab[yMap][xMap] = '2';
 				}
 			}
 		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
-			sprite = right;
-			sprite.update(delta);
-			if (!(mapTab[yMap][xMap + 1] == '1')) {
-				shiftX += stepVal;
-				xDisp = xMap * TILE_SIZE + shiftX;
-				yDisp = yMap * TILE_SIZE;
+			robot.setSpriteRight();
+			robot.getSprite().update(delta);
+			if (!(mapTab[robot.getYMap()][robot.getXMap() + 1] == '1')) {
+				shiftX += robot.getStepVal();
+				robot.setxDisp(robot.getXMap() * TILE_SIZE + shiftX);
+				robot.setyDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX >= TILE_SIZE) {
 					shiftX = 0;
 					// mapTab[yMap][xMap] = '0';
-					xMap = xMap + 1;
+					robot.setxMap(robot.getXMap() + 1);
 					// mapTab[yMap][xMap] = '2';
 				}
 			}
 		} else {
 			if (shiftX != 0) {
-				xDisp = xDisp - shiftX;
+				robot.setxDisp(robot.getXDisp() - shiftX);
 				shiftX = 0;
 			}
 			if (shiftY != 0) {
-				yDisp = yDisp - shiftY;
+				robot.setyDisp(robot.getYDisp() - shiftY);
 				shiftY = 0;
 			}
 		}
