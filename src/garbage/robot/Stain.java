@@ -153,13 +153,13 @@ public class Stain {
 	public void setFruity(boolean isFruity) {
 		this.isFruity = isFruity;
 	}
-	public int getxPos() {
+	public int getXPos() {
 		return xPos;
 	}
 	public void setxPos(int xPos) {
 		this.xPos = xPos;
 	}
-	public int getyPos() {
+	public int getYPos() {
 		return yPos;
 	}
 	public void setyPos(int yPos) {

@@ -106,13 +106,13 @@ public class Sprite {
 	public float getXDisp() {
 		return xDisp;
 	}
-	public void setxDisp(float xDisp) {
+	public void setXDisp(float xDisp) {
 		this.xDisp = xDisp;
 	}
 	public float getYDisp() {
 		return yDisp;
 	}
-	public void setyDisp(float yDisp) {
+	public void setYDisp(float yDisp) {
 		this.yDisp = yDisp;
 	}
 	

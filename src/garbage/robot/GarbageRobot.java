@@ -42,12 +42,13 @@ public class GarbageRobot extends BasicGame {
 
 		readMapFromFile();
 		generateStains();
+		PathMaker pathMaker = new PathMaker(4, 4, stainList);
 
 		try {
 			// set AppGameConteiner and start it
 			AppGameContainer app = new AppGameContainer(new GarbageRobot());
-			app.setDisplayMode(1024, 640, false);
-			app.setShowFPS(true);
+			app.setDisplayMode(1324, 640, false);
+			app.setShowFPS(false);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -70,11 +71,12 @@ public class GarbageRobot extends BasicGame {
 						&& mapTab[yStain][xStain] != 'S') {
 					mapTab[yStain][xStain] = 'S';
 					isOk = true;
+					tempStain = new Stain();
+					tempStain.setxPos(xStain);
+					tempStain.setyPos(yStain);
+					stainList.add(tempStain);
 				}
-				tempStain = new Stain();
-				tempStain.setxPos(xStain);
-				tempStain.setyPos(yStain);
-				stainList.add(tempStain);
+				
 			}
 		}
 	}
@@ -118,27 +120,27 @@ public class GarbageRobot extends BasicGame {
 		robot.getYDisp();
 		robot.getSprite().draw(robot.getXDisp(), robot.getYDisp());
 
-		g.drawString("PosX: " + robot.getXDisp(), 10f, 30f);
-		g.drawString("PosY: " + robot.getYDisp(), 10f, 50f);
-		g.drawString("-------------", 10f, 70f);
+		g.drawString("PosX: " + robot.getXDisp(), 1050f, 30f);
+		g.drawString("PosY: " + robot.getYDisp(), 1050f, 50f);
+		g.drawString("-------------", 1050f, 70f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 			Stain actStain = getStainByPosition(robot.getXMap(), robot.getYMap());
-			g.drawString("Wetness: " + actStain.getWetness(), 10f, 90f);
+			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 90f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
-					10f, 110f);
+					1050f, 110f);
 			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(),
-					10f, 130f);
-			g.drawString("Is Sticky?: " + actStain.isSticky(), 10f, 150f);
-			g.drawString("Size: " + actStain.getSize(), 10f, 170f);
-			g.drawString("Is Dried?: " + actStain.isDried(), 10f, 190f);
-			g.drawString("Is Greasy?: " + actStain.isGreasy(), 10f, 210f);
-			g.drawString("Softness: " + actStain.getSoftness(), 10f, 230f);
+					1050f, 130f);
+			g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 150f);
+			g.drawString("Size: " + actStain.getSize(), 1050f, 170f);
+			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 190f);
+			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 210f);
+			g.drawString("Softness: " + actStain.getSoftness(), 1050f, 230f);
 			g.drawString(
 					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
-					10f, 250f);
-			g.drawString("Height: " + actStain.getHeight(), 10f, 270f);
-			g.drawString("Is Fruity?: " + actStain.isFruity(), 10f, 290f);
-			g.drawString("Density: " + actStain.getDensity(), 10f, 310f);
+					1050f, 250f);
+			g.drawString("Height: " + actStain.getHeight(), 1050f, 270f);
+			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 290f);
+			g.drawString("Density: " + actStain.getDensity(), 1050f, 310f);
 		}
 	}
 
@@ -162,8 +164,8 @@ public class GarbageRobot extends BasicGame {
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap() - 1][robot.getXMap()] == '1')) {
 				shiftY -= robot.getStepVal();
-				robot.setxDisp(robot.getXMap() * TILE_SIZE); 
-				robot.setyDisp(robot.getYMap() * TILE_SIZE + shiftY);
+				robot.setXDisp(robot.getXMap() * TILE_SIZE); 
+				robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 				if (shiftY <= (-1 * TILE_SIZE)) {
 					shiftY = 0;
 					// mapTab[yMap][xMap] = '0';
@@ -177,8 +179,8 @@ public class GarbageRobot extends BasicGame {
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap() + 1][robot.getXMap()] == '1')) {
 				shiftY += robot.getStepVal();
-				robot.setxDisp(robot.getXMap()*TILE_SIZE);
-				robot.setyDisp(robot.getYMap()* TILE_SIZE + shiftY);
+				robot.setXDisp(robot.getXMap()*TILE_SIZE);
+				robot.setYDisp(robot.getYMap()* TILE_SIZE + shiftY);
 				if (shiftY >= TILE_SIZE) {
 					shiftY = 0;
 					// mapTab[yMap][xMap] = '0';
@@ -192,8 +194,8 @@ public class GarbageRobot extends BasicGame {
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap()][robot.getXMap() - 1] == '1')) {
 				shiftX -= robot.getStepVal();
-				robot.setxDisp(robot.getXMap() * TILE_SIZE + shiftX);
-				robot.setyDisp(robot.getYMap() * TILE_SIZE);
+				robot.setXDisp(robot.getXMap() * TILE_SIZE + shiftX);
+				robot.setYDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX <= (-1 * TILE_SIZE)) {
 					shiftX = 0;
 					// mapTab[yMap][xMap] = '0';
@@ -206,8 +208,8 @@ public class GarbageRobot extends BasicGame {
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap()][robot.getXMap() + 1] == '1')) {
 				shiftX += robot.getStepVal();
-				robot.setxDisp(robot.getXMap() * TILE_SIZE + shiftX);
-				robot.setyDisp(robot.getYMap() * TILE_SIZE);
+				robot.setXDisp(robot.getXMap() * TILE_SIZE + shiftX);
+				robot.setYDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX >= TILE_SIZE) {
 					shiftX = 0;
 					// mapTab[yMap][xMap] = '0';
@@ -217,11 +219,11 @@ public class GarbageRobot extends BasicGame {
 			}
 		} else {
 			if (shiftX != 0) {
-				robot.setxDisp(robot.getXDisp() - shiftX);
+				robot.setXDisp(robot.getXDisp() - shiftX);
 				shiftX = 0;
 			}
 			if (shiftY != 0) {
-				robot.setyDisp(robot.getYDisp() - shiftY);
+				robot.setYDisp(robot.getYDisp() - shiftY);
 				shiftY = 0;
 			}
 		}
@@ -231,7 +233,7 @@ public class GarbageRobot extends BasicGame {
 	private Stain getStainByPosition(int xPos, int yPos) {
 		Stain ret = null;
 		for (Stain stain : stainList) {
-			if (stain.getxPos() == xPos && stain.getyPos() == yPos) {
+			if (stain.getXPos() == xPos && stain.getYPos() == yPos) {
 				ret = stain;
 			}
 		}
