@@ -37,7 +37,7 @@ public class GarbageRobot extends BasicGame {
 	}
 
 	// start the GAME!
-	public static void main(String[] arguments) {
+	public static void main(String[] arguments) throws SlickException {
 		robot = new Sprite();
 
 		readMapFromFile();
@@ -56,7 +56,7 @@ public class GarbageRobot extends BasicGame {
 	}
 
 	// method put stains on room.
-	public static void generateStains() {
+	public static void generateStains() throws SlickException {
 		Stain tempStain;
 		stainList = new ArrayList<Stain>();
 		int xStain, yStain;
@@ -112,13 +112,16 @@ public class GarbageRobot extends BasicGame {
 					g.drawImage(obstacle, i * 32, j * 32);
 				}
 				if (mapTab[j][i] == 'S') {
-					g.drawImage(stainPic, i * 32, j * 32);
+					Stain stain = getStainByPosition(i, j);
+					Image image = new Image(stain.getImage());
+					g.drawImage(image, i * 32, j * 32); 
 				}
 			}
 		robot.getSprite();
 		robot.getXDisp();
 		robot.getYDisp();
 		robot.getSprite().draw(robot.getXDisp(), robot.getYDisp());
+
 
 		g.drawString("PosX: " + robot.getXDisp(), 1050f, 30f);
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 50f);
@@ -141,6 +144,9 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Height: " + actStain.getHeight(), 1050f, 270f);
 			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 290f);
 			g.drawString("Density: " + actStain.getDensity(), 1050f, 310f);
+			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
+			
+			//smth todo
 		}
 	}
 
