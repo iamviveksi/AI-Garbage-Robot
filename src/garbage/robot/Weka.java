@@ -2,6 +2,7 @@ package garbage.robot;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -78,15 +79,19 @@ public class Weka {
 				+ "," + stain.getRoughness() + "," + stain.getDangerousBacteries() + "," + stain.isFruity() + "," + stain.getDensity() + ",?";
 		
 		BufferedWriter writer = null;	
-		writer = new BufferedWriter(new FileWriter("data-one.arff"));
+		writer = new BufferedWriter(new FileWriter("poligon/data-one.arff"));
 		writer.write(line);
 		writer.close();
 		
-		BufferedReader reader = new BufferedReader(new FileReader("data-one.arff"));
+		BufferedReader reader = new BufferedReader(new FileReader("poligon/data-one.arff"));
 		Instances item = new Instances(reader);
 		item.setClassIndex(item.numAttributes() - 1);		
 		double clsLabel = tree.classifyInstance(item.instance(0));
 		item.instance(0).setClassValue(clsLabel);
+		reader.close();
+		
+		File file = new File("poligon/data-one.arff");
+		file.delete();
 		
 		String itemLine = item.instance(0).toString();
 		if(itemLine.contains("wine")) itemClass = "wine";
