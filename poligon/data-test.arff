@@ -1,0 +1,25 @@
+@relation rubbish-test
+
+@attribute wetness numeric
+@attribute colorIntensity numeric
+@attribute smellIntensity numeric
+@attribute isSticky {TRUE, FALSE}
+@attribute isGreasy {TRUE, FALSE}
+@attribute roughness numeric
+@attribute dangerousBacteries numeric
+@attribute isFruity {TRUE, FALSE}
+@attribute density numeric
+@attribute class {wine, water, coffee, ink, cake, sauce, dressing, oil, blood, lubricant, mud, grass, glue, sand, dust, paste, glass, paper, rot, fungus}
+
+
+@data
+92,96,24,FALSE,FALSE,12,3,TRUE,0,?
+90,86,40,FALSE,FALSE,0,3,FALSE,4,?
+69,87,54,TRUE,TRUE,11,46,FALSE,50,?
+52,52,21,TRUE,TRUE,10,2,FALSE,50,?
+12,0,83,TRUE,TRUE,13,10,FALSE,80,?
+0,12,6,FALSE,FALSE,68,24,FALSE,1,?
+43,53,65,TRUE,FALSE,17,88,FALSE,65,?
+1,12,0,FALSE,FALSE,83,1,FALSE,97,?
+21,65,87,TRUE,FALSE,23,77,TRUE,64,?
+0,21,2,TRUE,TRUE,32,33,TRUE,52,?

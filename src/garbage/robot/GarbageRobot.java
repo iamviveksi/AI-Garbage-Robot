@@ -137,7 +137,7 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Size: " + actStain.getSize(), 1050f, 170f);
 			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 190f);
 			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 210f);
-			g.drawString("Softness: " + actStain.getSoftness(), 1050f, 230f);
+			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 230f);
 			g.drawString(
 					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
 					1050f, 250f);

@@ -15,7 +15,7 @@ public class Stain {
 	private int size;
 	private boolean isDried;
 	private boolean isGreasy;
-	private int softness;
+	private int roughness;
 	private int dangerousBacteries;
 	private int height;
 	private boolean isFruity;
@@ -34,7 +34,7 @@ public class Stain {
 	
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
-			boolean isGreasy, int softness, int dangerousBacteries, int height,
+			boolean isGreasy, int roughness, int dangerousBacteries, int height,
 			boolean isFruity, int density, String type, String image) throws SlickException {
 		super();
 		this.xPos = xPos;
@@ -46,7 +46,7 @@ public class Stain {
 		this.size = size;
 		this.isDried = isDried;
 		this.isGreasy = isGreasy;
-		this.softness = softness;
+		this.roughness = roughness;
 		this.dangerousBacteries = dangerousBacteries;
 		this.height = height;
 		this.isFruity = isFruity;
@@ -65,7 +65,7 @@ public class Stain {
 		this.size =  generator.nextInt(100);
 		this.isDried = generator.nextBoolean();
 		this.isGreasy = generator.nextBoolean();
-		this.softness =  generator.nextInt(100);
+		this.roughness =  generator.nextInt(100);
 		this.dangerousBacteries =  generator.nextInt(100);
 		this.height =  generator.nextInt(100);
 		this.isFruity = generator.nextBoolean();
@@ -82,7 +82,7 @@ public class Stain {
 				+ wetness + ", colorIntensity=" + colorIntensity
 				+ ", smellIntensity=" + smellIntensity + ", isSticky="
 				+ isSticky + ", size=" + size + ", isDried=" + isDried
-				+ ", isGreasy=" + isGreasy + ", softness=" + softness
+				+ ", isGreasy=" + isGreasy + ", roughness=" + roughness
 				+ ", dangerousBacteries=" + dangerousBacteries + ", height="
 				+ height + ", isFruity=" + isFruity + ", density=" + density
 				+ "]";
@@ -138,11 +138,11 @@ public class Stain {
 	public void setGreasy(boolean isGreasy) {
 		this.isGreasy = isGreasy;
 	}
-	public int getSoftness() {
-		return softness;
+	public int getRoughness() {
+		return roughness;
 	}
-	public void setSoftness(int softness) {
-		this.softness = softness;
+	public void setRoughness(int roughness) {
+		this.roughness = roughness;
 	}
 	public int getDangerousBacteries() {
 		return dangerousBacteries;
