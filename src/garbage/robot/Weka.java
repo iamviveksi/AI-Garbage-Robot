@@ -55,8 +55,9 @@ public class Weka {
 		predicted = null;
 	}
 	
-	public String predictItem(Stain stain) throws IOException
+	public String predictItem(Stain stain) throws Exception
 	{
+		String itemClass = "";
 		String fileContent = 
 				"@relation rubbish-predict\n"
 				+ "@attribute wetness numeric\n"
@@ -72,18 +73,44 @@ public class Weka {
 				+ "\n"
 				+ "@data\n";
 		
-		String line = "";
-		line = line + stain.getWetness() + "," + stain.getColorIntensity() + "," + stain.getSmellIntensity() + "," + stain.isSticky() + "," + stain.isGreasy() 
+		String line = fileContent
+				+ stain.getWetness() + "," + stain.getColorIntensity() + "," + stain.getSmellIntensity() + "," + stain.isSticky() + "," + stain.isGreasy() 
 				+ "," + stain.getRoughness() + "," + stain.getDangerousBacteries() + "," + stain.isFruity() + "," + stain.getDensity() + ",?";
 		
 		BufferedWriter writer = null;	
 		writer = new BufferedWriter(new FileWriter("data-one.arff"));
-		writer.write(fileContent);
+		writer.write(line);
 		writer.close();
 		
-		//double clsLabel = tree.classifyInstance(test.instance(i));
-		//predicted.instance(i).setClassValue(clsLabel);
-		return line;
+		BufferedReader reader = new BufferedReader(new FileReader("data-one.arff"));
+		Instances item = new Instances(reader);
+		item.setClassIndex(item.numAttributes() - 1);		
+		double clsLabel = tree.classifyInstance(item.instance(0));
+		item.instance(0).setClassValue(clsLabel);
+		
+		String itemLine = item.instance(0).toString();
+		if(itemLine.contains("wine")) itemClass = "wine";
+		else if(itemLine.contains("water")) itemClass = "water";
+		else if(itemLine.contains("coffee")) itemClass = "coffee";
+		else if(itemLine.contains("ink")) itemClass = "ink";
+		else if(itemLine.contains("cake")) itemClass = "cake";
+		else if(itemLine.contains("sauce")) itemClass = "sauce";
+		else if(itemLine.contains("dressing")) itemClass = "dressing";
+		else if(itemLine.contains("oil")) itemClass = "oil";
+		else if(itemLine.contains("blood")) itemClass = "blood";
+		else if(itemLine.contains("lubricant")) itemClass = "lubricant";
+		else if(itemLine.contains("mud")) itemClass = "mud";
+		else if(itemLine.contains("grass")) itemClass = "grass";
+		else if(itemLine.contains("glue")) itemClass = "glue";
+		else if(itemLine.contains("sand")) itemClass = "sand";
+		else if(itemLine.contains("dust")) itemClass = "dust";
+		else if(itemLine.contains("paste")) itemClass = "paste";
+		else if(itemLine.contains("glass")) itemClass = "glass";
+		else if(itemLine.contains("paper")) itemClass = "paper";
+		else if(itemLine.contains("rot")) itemClass = "rot";
+		else if(itemLine.contains("fungus")) itemClass = "fungus";
+		
+		return itemClass;
 	}
 	
 	public void writePredictions(String predictions) throws Exception

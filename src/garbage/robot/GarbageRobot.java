@@ -30,6 +30,8 @@ public class GarbageRobot extends BasicGame {
 	private Image stainPic;
 	private static int numberOfStains;
 	private static List<Stain> stainList;
+	
+	private Weka weka = null; 
 
 	public GarbageRobot() {
 		// text in the main window
@@ -128,6 +130,14 @@ public class GarbageRobot extends BasicGame {
 		g.drawString("-------------", 1050f, 70f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 			Stain actStain = getStainByPosition(robot.getXMap(), robot.getYMap());
+			try {
+				String classItem = weka.predictItem(actStain);
+				actStain.setType(classItem);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 90f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
 					1050f, 110f);
@@ -152,6 +162,12 @@ public class GarbageRobot extends BasicGame {
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
+		try {
+			weka = new Weka("poligon/data-learning.arff", "poligon/data-test.arff");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.err.println("INIT");
 		robot.init(4, 4);
 		floor = new Image("data/grass.png");
