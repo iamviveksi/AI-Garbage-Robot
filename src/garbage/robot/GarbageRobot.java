@@ -197,8 +197,8 @@ public class GarbageRobot extends BasicGame {
 					isMoving = false;
 				}
 			} else { // when robot isWalking
-				switch(robot.getDirection()){
-				case 'N':{
+				switch (robot.getDirection()) {
+				case 'N': {
 					shiftY -= robot.getStepVal();
 					robot.setXDisp(robot.getXMap() * TILE_SIZE);
 					robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
@@ -209,7 +209,7 @@ public class GarbageRobot extends BasicGame {
 					}
 					break;
 				}
-				case 'W':{
+				case 'W': {
 					shiftX -= robot.getStepVal();
 					robot.setXDisp(robot.getXMap() * TILE_SIZE + shiftX);
 					robot.setYDisp(robot.getYMap() * TILE_SIZE);
@@ -220,7 +220,7 @@ public class GarbageRobot extends BasicGame {
 					}
 					break;
 				}
-				case 'S':{
+				case 'S': {
 					shiftY += robot.getStepVal();
 					robot.setXDisp(robot.getXMap() * TILE_SIZE);
 					robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
@@ -231,7 +231,7 @@ public class GarbageRobot extends BasicGame {
 					}
 					break;
 				}
-				case 'E':{
+				case 'E': {
 					shiftX += robot.getStepVal();
 					robot.setXDisp(robot.getXMap() * TILE_SIZE + shiftX);
 					robot.setYDisp(robot.getYMap() * TILE_SIZE);
@@ -249,12 +249,12 @@ public class GarbageRobot extends BasicGame {
 		} else if (input.isKeyDown(Input.KEY_G)) {
 			isMoving = true;
 
-//			Stain endStain = getNearestStain();
-			Stain endStain = unvisitedStains.get(0);
-
-			movesList = PathMaker.makePath(robot.getXMap(), robot.getYMap(),
-					robot.getDirection(), endStain.getXPos(),
-					endStain.getYPos());
+			Stain endStain = getNearestStain();
+			// Stain endStain = unvisitedStains.get(0);
+			if (endStain != null)
+				movesList = PathMaker.makePath(robot.getXMap(),
+						robot.getYMap(), robot.getDirection(),
+						endStain.getXPos(), endStain.getYPos());
 
 		} else if (input.isKeyDown(Input.KEY_UP)) {
 			robot.setSpriteUp();// set sprite
@@ -325,15 +325,15 @@ public class GarbageRobot extends BasicGame {
 		if (!unvisitedStains.isEmpty()) {
 			stain = unvisitedStains.get(0);
 			index = 0;
-			distance = Math.abs(stain.getXPos() - robot.getXMap())
-					+ Math.abs(stain.getYPos() - robot.getYMap()) * 10;
-			for (int i = 1; i <= unvisitedStains.size(); i++) {
+			distance = (Math.abs(stain.getXPos() - robot.getXMap()) + Math
+					.abs(stain.getYPos() - robot.getYMap())) * 10;
+			for (int i = 1; i < unvisitedStains.size(); i++) {
 				stain = unvisitedStains.get(i);
-				if (distance < Math.abs(stain.getXPos() - robot.getXMap())
-						+ Math.abs(stain.getYPos() - robot.getYMap()) * 10) {
+				if (distance > (Math.abs(stain.getXPos() - robot.getXMap()) + Math
+						.abs(stain.getYPos() - robot.getYMap())) * 10) {
 					index = i;
-					distance = Math.abs(stain.getXPos() - robot.getXMap())
-							+ Math.abs(stain.getYPos() - robot.getYMap()) * 10;
+					distance = (Math.abs(stain.getXPos() - robot.getXMap()) + Math
+							.abs(stain.getYPos() - robot.getYMap())) * 10;
 				}
 			}
 			return unvisitedStains.remove(index);
