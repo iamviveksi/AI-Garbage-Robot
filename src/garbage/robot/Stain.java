@@ -2,6 +2,9 @@ package garbage.robot;
 
 import java.util.Random;
 
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
 public class Stain {
 	private int xPos;
 	private int yPos;
@@ -12,25 +15,27 @@ public class Stain {
 	private int size;
 	private boolean isDried;
 	private boolean isGreasy;
-	private int softness;
+	private int roughness;
 	private int dangerousBacteries;
 	private int height;
 	private boolean isFruity;
 	private int density;
+	private String type;
+	private String image;
 	
 	
 	
 	//constructor
 	
-	public Stain(){
+	public Stain() throws SlickException{
 		drawParams();
 	}
 	
 	
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
-			boolean isGreasy, int softness, int dangerousBacteries, int height,
-			boolean isFruity, int density) {
+			boolean isGreasy, int roughness, int dangerousBacteries, int height,
+			boolean isFruity, int density, String type, String image) throws SlickException {
 		super();
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -41,15 +46,17 @@ public class Stain {
 		this.size = size;
 		this.isDried = isDried;
 		this.isGreasy = isGreasy;
-		this.softness = softness;
+		this.roughness = roughness;
 		this.dangerousBacteries = dangerousBacteries;
 		this.height = height;
 		this.isFruity = isFruity;
 		this.density = density;
+		this.type = type;
+		this.image = image;
 	}
 	
 	//method draw params for pain
-	private void drawParams(){
+	private void drawParams() throws SlickException{
 		Random generator = new Random();
 		this.wetness = generator.nextInt(100);
 		this.colorIntensity =  generator.nextInt(100);
@@ -58,11 +65,13 @@ public class Stain {
 		this.size =  generator.nextInt(100);
 		this.isDried = generator.nextBoolean();
 		this.isGreasy = generator.nextBoolean();
-		this.softness =  generator.nextInt(100);
+		this.roughness =  generator.nextInt(100);
 		this.dangerousBacteries =  generator.nextInt(100);
 		this.height =  generator.nextInt(100);
 		this.isFruity = generator.nextBoolean();
 		this.density = generator.nextInt(100);
+		this.type = "Stain";
+		this.image = "data/stain.png";
 	}
 	
 
@@ -73,7 +82,7 @@ public class Stain {
 				+ wetness + ", colorIntensity=" + colorIntensity
 				+ ", smellIntensity=" + smellIntensity + ", isSticky="
 				+ isSticky + ", size=" + size + ", isDried=" + isDried
-				+ ", isGreasy=" + isGreasy + ", softness=" + softness
+				+ ", isGreasy=" + isGreasy + ", roughness=" + roughness
 				+ ", dangerousBacteries=" + dangerousBacteries + ", height="
 				+ height + ", isFruity=" + isFruity + ", density=" + density
 				+ "]";
@@ -129,11 +138,11 @@ public class Stain {
 	public void setGreasy(boolean isGreasy) {
 		this.isGreasy = isGreasy;
 	}
-	public int getSoftness() {
-		return softness;
+	public int getRoughness() {
+		return roughness;
 	}
-	public void setSoftness(int softness) {
-		this.softness = softness;
+	public void setRoughness(int roughness) {
+		this.roughness = roughness;
 	}
 	public int getDangerousBacteries() {
 		return dangerousBacteries;
@@ -165,6 +174,20 @@ public class Stain {
 	public void setYPos(int yPos) {
 		this.yPos = yPos;
 	}
-	
-	
+	public String getType()
+	{
+		return type;
+	}
+	public void setType(String t)
+	{
+		this.type = t;
+	}
+	public String getImage()
+	{
+		return image;
+	}
+	public void setImage(String i)
+	{
+		this.image = i;
+	}
 }

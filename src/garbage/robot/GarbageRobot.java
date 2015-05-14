@@ -28,19 +28,21 @@ public class GarbageRobot extends BasicGame {
 	private Image stainPic;
 	private static int numberOfStains;
 	private static List<Stain> stainList;
+
 	private static List<Stain> unvisitedStains;
 	private static LinkedList<Move> movesList;
 	private static boolean isMoving = false;
 	private static boolean isWalking = false;
-
+	private Weka weka = null; 
 	public GarbageRobot() {
 		// text in the main window
 		super("Garbage Robot AI");
 	}
 
 	// start the GAME!
-	public static void main(String[] arguments) {
-		// PathMaker.makePath(1, 2, 'N', new Stain());
+
+
+	public static void main(String[] arguments) throws SlickException {
 		robot = new Sprite();
 
 		readMapFromFile();
@@ -58,7 +60,7 @@ public class GarbageRobot extends BasicGame {
 	}
 
 	// method put stains on room.
-	public static void generateStains() {
+	public static void generateStains() throws SlickException {
 		Stain tempStain;
 		stainList = new ArrayList<Stain>();
 		unvisitedStains = new ArrayList<Stain>();
@@ -116,7 +118,9 @@ public class GarbageRobot extends BasicGame {
 					g.drawImage(obstacle, i * 32, j * 32);
 				}
 				if (mapTab[j][i] == 'S') {
-					g.drawImage(stainPic, i * 32, j * 32);
+					Stain stain = getStainByPosition(i, j);
+					Image image = new Image(stain.getImage());
+					g.drawImage(image, i * 32, j * 32); 
 				}
 			}
 		robot.getSprite();
@@ -124,12 +128,22 @@ public class GarbageRobot extends BasicGame {
 		robot.getYDisp();
 		robot.getSprite().draw(robot.getXDisp(), robot.getYDisp());
 
+
 		g.drawString("PosX: " + robot.getXDisp(), 1050f, 30f);
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 50f);
 		g.drawString("-------------", 1050f, 70f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
-			Stain actStain = getStainByPosition(robot.getXMap(),
-					robot.getYMap());
+
+			Stain actStain = getStainByPosition(robot.getXMap(), robot.getYMap());
+			try {
+				String classItem = weka.predictItem(actStain);
+				actStain.setType(classItem);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 90f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
 					1050f, 110f);
@@ -139,18 +153,27 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Size: " + actStain.getSize(), 1050f, 170f);
 			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 190f);
 			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 210f);
-			g.drawString("Softness: " + actStain.getSoftness(), 1050f, 230f);
+			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 230f);
 			g.drawString(
 					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
 					1050f, 250f);
 			g.drawString("Height: " + actStain.getHeight(), 1050f, 270f);
 			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 290f);
 			g.drawString("Density: " + actStain.getDensity(), 1050f, 310f);
+			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
+			
+			//smth todo
 		}
 	}
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
+		try {
+			weka = new Weka("poligon/data-learning.arff", "poligon/data-test.arff");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.err.println("INIT");
 		robot.init(4, 4);
 
