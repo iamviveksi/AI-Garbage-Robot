@@ -179,7 +179,7 @@ public class GarbageRobot extends BasicGame {
 		robot.init(4, 4);
 
 		floor = new Image("data/floor.png");
-		obstacle = new Image("data/smallRocks.png");
+		obstacle = new Image("data/wall.png");
 		stainPic = new Image("data/stain.png");
 		// mapTab[yMap][xMap] = 2;
 	}
