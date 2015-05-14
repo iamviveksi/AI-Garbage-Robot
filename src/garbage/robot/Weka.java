@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
@@ -54,9 +55,35 @@ public class Weka {
 		predicted = null;
 	}
 	
-	public String predictItem(String params)
+	public String predictItem(Stain stain) throws IOException
 	{
-		return "Stain";
+		String fileContent = 
+				"@relation rubbish-predict\n"
+				+ "@attribute wetness numeric\n"
+				+ "@attribute colorIntensity numeric\n"
+				+ "@attribute smellIntensity numeric\n"
+				+ "@attribute isSticky {true,false}\n"
+				+ "@attribute isGreasy {true,false}\n"
+				+ "@attribute roughness numeric\n"
+				+ "@attribute dangerousBacteries numeric\n"
+				+ "@attribute isFruity {true,false}\n"
+				+ "@attribute density numeric\n"
+				+ "@attribute class {wine,water,coffee,ink,cake,sauce,dressing,oil,blood,lubricant,mud,grass,glue,sand,dust,paste,glass,paper,rot,fungus}\n"
+				+ "\n"
+				+ "@data\n";
+		
+		String line = "";
+		line = line + stain.getWetness() + "," + stain.getColorIntensity() + "," + stain.getSmellIntensity() + "," + stain.isSticky() + "," + stain.isGreasy() 
+				+ "," + stain.getRoughness() + "," + stain.getDangerousBacteries() + "," + stain.isFruity() + "," + stain.getDensity() + ",?";
+		
+		BufferedWriter writer = null;	
+		writer = new BufferedWriter(new FileWriter("data-one.arff"));
+		writer.write(fileContent);
+		writer.close();
+		
+		//double clsLabel = tree.classifyInstance(test.instance(i));
+		//predicted.instance(i).setClassValue(clsLabel);
+		return line;
 	}
 	
 	public void writePredictions(String predictions) throws Exception
