@@ -156,13 +156,13 @@ public class Stain {
 	public int getXPos() {
 		return xPos;
 	}
-	public void setxPos(int xPos) {
+	public void setXPos(int xPos) {
 		this.xPos = xPos;
 	}
 	public int getYPos() {
 		return yPos;
 	}
-	public void setyPos(int yPos) {
+	public void setYPos(int yPos) {
 		this.yPos = yPos;
 	}
 	

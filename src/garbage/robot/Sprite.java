@@ -6,22 +6,24 @@ import org.newdawn.slick.SlickException;
 
 public class Sprite {
 	private Animation sprite, up, down, left, right; // sprites
+	private char direction;
 	private float stepVal;
 	private int xMap;
 	private int yMap;
 	private float xDisp;
 	private float yDisp;
-	
-	public void init(int xMap, int yMap) throws SlickException{
+	private Move currentMove;
+
+	public void init(int xMap, int yMap) throws SlickException {
 		this.xMap = xMap;
 		this.yMap = yMap;
 		xDisp = 32 * xMap;
 		yDisp = 32 * yMap;
 		this.setAnimations(100, 100);
 	}
-	
-	
-	private void setAnimations(int duration1, int duration2) throws SlickException{
+
+	private void setAnimations(int duration1, int duration2)
+			throws SlickException {
 		Image[] movementUp = { new Image("data/wmg1_bk1.png"),
 				new Image("data/wmg1_bk2.png") };
 		Image[] movementDown = { new Image("data/wmg1_fr1.png"),
@@ -40,81 +42,160 @@ public class Sprite {
 		this.left = new Animation(movementLeft, duration, false);
 		this.right = new Animation(movementRight, duration, false);
 		this.sprite = down; // main orientation
+		this.direction = 'S';
 	}
-	
-	public void setSpriteUp(){
+
+	public Move getCurrentMove() {
+		return currentMove;
+	}
+
+	public void setCurrentMove(Move currentMove) {
+		this.currentMove = currentMove;
+	}
+
+	public void setSpriteUp() {
 		sprite = up;
+		this.direction = 'N';
 	}
-	public void setSpriteDown(){
+
+	public void setSpriteDown() {
 		sprite = down;
+		this.direction = 'S';
 	}
-	public void setSpriteRight(){
+
+	public void setSpriteRight() {
 		sprite = right;
+		this.direction = 'E';
 	}
-	public void setSpriteLeft(){
+
+	public void setSpriteLeft() {
 		sprite = left;
+		this.direction = 'W';
 	}
-	
+
+	public char getDirection() {
+		return direction;
+	}
+
 	public Animation getSprite() {
 		return sprite;
 	}
+
 	public void setSprite(Animation sprite) {
 		this.sprite = sprite;
 	}
+
 	public Animation getUp() {
 		return up;
 	}
+
 	public void setUp(Animation up) {
 		this.up = up;
 	}
+
 	public Animation getDown() {
 		return down;
 	}
+
 	public void setDown(Animation down) {
 		this.down = down;
 	}
+
 	public Animation getLeft() {
 		return left;
 	}
+
 	public void setLeft(Animation left) {
 		this.left = left;
 	}
+
 	public Animation getRight() {
 		return right;
 	}
+
 	public void setRight(Animation right) {
 		this.right = right;
 	}
-	public  float getStepVal() {
+
+	public float getStepVal() {
 		return stepVal;
 	}
+
 	public void setStepVal(float stepVal) {
 		this.stepVal = stepVal;
 	}
+
 	public int getXMap() {
 		return xMap;
 	}
+
 	public void setxMap(int xMap) {
 		this.xMap = xMap;
 	}
+
 	public int getYMap() {
 		return yMap;
 	}
+
 	public void setyMap(int yMap) {
 		this.yMap = yMap;
 	}
+
 	public float getXDisp() {
 		return xDisp;
 	}
+
 	public void setXDisp(float xDisp) {
 		this.xDisp = xDisp;
 	}
+
 	public float getYDisp() {
 		return yDisp;
 	}
+
 	public void setYDisp(float yDisp) {
 		this.yDisp = yDisp;
 	}
-	
-	
+
+	public void turnLeft() {
+		switch (this.direction) {
+		case 'N': {
+			this.setSpriteLeft();
+			break;
+		}
+		case 'W': {
+			this.setSpriteDown();
+			break;
+		}
+		case 'S': {
+			this.setSpriteRight();
+			break;
+		}
+		case 'E': {
+			this.setSpriteUp();
+			break;
+		}
+		}
+	}
+
+	public void turnRight() {
+		switch (this.direction) {
+		case 'N': {
+			this.setSpriteRight();
+			break;
+		}
+		case 'W': {
+			this.setSpriteUp();
+			break;
+		}
+		case 'S': {
+			this.setSpriteLeft();
+			break;
+		}
+		case 'E': {
+			this.setSpriteDown();
+			break;
+		}
+		}
+	}
 }

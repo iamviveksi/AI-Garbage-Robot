@@ -1,55 +1,87 @@
 package garbage.robot;
 
 public class State {
-	int x;
-	int y;
-	float distance;
-	char direction;
-	private final String NORTH = "NORTH";
-	private final String WEST = "WEST";
-	private final String EAST = "EAST";
-	private final String SOUTH = "SOUTH";
-	
-	
-	
-	
-	public State(int x, int y, char direction) {
-		super();
+	private int x;
+	private int y;
+	private int H;
+	private int G;
+	private int F;
+	private char direction;
+	private State Parent;
+
+	public State(int x, int y, char direction, State parent) {
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
-	} 
-	
-	
-	public void calculateDistance(int parX, int parY){
-		 distance = (float) Math.sqrt( (parX - x) * (parX - x) + (parY - y) * (parY - y));
+		Parent = parent;
 	}
-	
-	
-	
+
+	public boolean equate(int pX, int pY, char pDirection) {
+		if ((this.x == pX) && (this.y == pY) && (this.direction == pDirection))
+			return true;
+		else
+			return false;
+	}
+
 	public int getX() {
 		return x;
 	}
+
 	public void setX(int x) {
 		this.x = x;
 	}
+
 	public int getY() {
 		return y;
 	}
+
 	public void setY(int y) {
 		this.y = y;
 	}
-	public float getDistance() {
-		return distance;
+
+	public int getH() {
+		return H;
 	}
-	public void setDistance(int distance) {
-		this.distance = distance;
+
+	public void setH(int h) {
+		H = h;
 	}
+
+	public void setH(Stain stain) {
+		H = Math.abs(stain.getXPos() - this.x)
+				+ Math.abs(stain.getYPos() - this.y) * 10;
+	}
+
+	public int getG() {
+		return G;
+	}
+
+	public void setG(int g) {
+		G = g;
+	}
+
+	public int getF() {
+		return F;
+	}
+
+	public void setF() {
+		F = H + G;
+	}
+
 	public char getDirection() {
 		return direction;
 	}
+
 	public void setDirection(char direction) {
 		this.direction = direction;
 	}
-	
+
+	public State getParent() {
+		return Parent;
+	}
+
+	public void setParent(State parent) {
+		Parent = parent;
+	}
+
 }

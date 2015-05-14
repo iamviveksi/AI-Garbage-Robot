@@ -1,6 +1,7 @@
 package garbage.robot;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,18 +19,19 @@ public class GarbageRobot extends BasicGame {
 	private Image floor;
 	private Image obstacle;
 	private static Sprite robot;
-	
 	private static final int TILE_SIZE = 32;
-	
 	private static int tilesX;
 	private static int tilesY;
 	private static char[][] mapTab;
-	
 	private float shiftY = 0;
 	private float shiftX = 0;
 	private Image stainPic;
 	private static int numberOfStains;
 	private static List<Stain> stainList;
+	private static List<Stain> unvisitedStains;
+	private static LinkedList<Move> movesList;
+	private static boolean isMoving = false;
+	private static boolean isWalking = false;
 
 	public GarbageRobot() {
 		// text in the main window
@@ -38,11 +40,11 @@ public class GarbageRobot extends BasicGame {
 
 	// start the GAME!
 	public static void main(String[] arguments) {
+		// PathMaker.makePath(1, 2, 'N', new Stain());
 		robot = new Sprite();
 
 		readMapFromFile();
 		generateStains();
-		PathMaker pathMaker = new PathMaker(4, 4, stainList);
 
 		try {
 			// set AppGameConteiner and start it
@@ -59,6 +61,7 @@ public class GarbageRobot extends BasicGame {
 	public static void generateStains() {
 		Stain tempStain;
 		stainList = new ArrayList<Stain>();
+		unvisitedStains = new ArrayList<Stain>();
 		int xStain, yStain;
 		boolean isOk = false;
 		Random generator = new Random();
@@ -72,11 +75,11 @@ public class GarbageRobot extends BasicGame {
 					mapTab[yStain][xStain] = 'S';
 					isOk = true;
 					tempStain = new Stain();
-					tempStain.setxPos(xStain);
-					tempStain.setyPos(yStain);
+					tempStain.setXPos(xStain);
+					tempStain.setYPos(yStain);
 					stainList.add(tempStain);
+					unvisitedStains.add(tempStain);
 				}
-				
 			}
 		}
 	}
@@ -87,7 +90,8 @@ public class GarbageRobot extends BasicGame {
 		propertiesSupport.load();
 		tilesX = Integer.parseInt(propertiesSupport.getProperty("map_x"));
 		tilesY = Integer.parseInt(propertiesSupport.getProperty("map_y"));
-		robot.setStepVal(Float.parseFloat(propertiesSupport.getProperty("stepVal"))); 
+		robot.setStepVal(Float.parseFloat(propertiesSupport
+				.getProperty("stepVal")));
 		numberOfStains = Integer.parseInt(propertiesSupport
 				.getProperty("stainsOnRoom"));
 		MapReader mapReader = new MapReader(tilesX, tilesY);
@@ -124,7 +128,8 @@ public class GarbageRobot extends BasicGame {
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 50f);
 		g.drawString("-------------", 1050f, 70f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
-			Stain actStain = getStainByPosition(robot.getXMap(), robot.getYMap());
+			Stain actStain = getStainByPosition(robot.getXMap(),
+					robot.getYMap());
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 90f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
 					1050f, 110f);
@@ -148,6 +153,19 @@ public class GarbageRobot extends BasicGame {
 	public void init(GameContainer arg0) throws SlickException {
 		System.err.println("INIT");
 		robot.init(4, 4);
+
+		// test Path
+		// Stain testStain = unvisitedStains.get(0);
+		Stain testStain = new Stain();
+		testStain.setXPos(4);
+		testStain.setYPos(10);
+		System.out.println("CEL: x-" + testStain.getXPos() + " y-"
+				+ testStain.getYPos());
+		PathMaker.makePath(robot.getXMap(), robot.getYMap(),
+				robot.getDirection(), testStain.getXPos(), testStain.getYPos());
+
+		// /
+
 		floor = new Image("data/grass.png");
 		obstacle = new Image("data/smallRocks.png");
 		stainPic = new Image("data/stain.png");
@@ -159,18 +177,95 @@ public class GarbageRobot extends BasicGame {
 	public void update(GameContainer container, int delta)
 			throws SlickException {
 		Input input = container.getInput();
-		if (input.isKeyDown(Input.KEY_UP)) {
+
+		if (isMoving) {
+			if (!isWalking) {
+				if (!movesList.isEmpty()) {
+					robot.setCurrentMove(movesList.poll());
+					if (robot.getCurrentMove() == Move.LEFT) {
+						robot.turnLeft();
+						robot.getSprite().update(delta);
+					}
+					if (robot.getCurrentMove() == Move.RIGHT) {
+						robot.turnRight();
+						robot.getSprite().update(delta);
+					}
+					if (robot.getCurrentMove() == Move.GO) {
+						isWalking = true;
+					}
+				} else {
+					isMoving = false;
+				}
+			} else { // when robot isWalking
+				switch(robot.getDirection()){
+				case 'N':{
+					shiftY -= robot.getStepVal();
+					robot.setXDisp(robot.getXMap() * TILE_SIZE);
+					robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
+					if (shiftY <= (-1 * TILE_SIZE)) {
+						shiftY = 0;
+						robot.setyMap(robot.getYMap() - 1);
+						isWalking = false;
+					}
+					break;
+				}
+				case 'W':{
+					shiftX -= robot.getStepVal();
+					robot.setXDisp(robot.getXMap() * TILE_SIZE + shiftX);
+					robot.setYDisp(robot.getYMap() * TILE_SIZE);
+					if (shiftX <= (-1 * TILE_SIZE)) {
+						shiftX = 0;
+						robot.setxMap(robot.getXMap() - 1);
+						isWalking = false;
+					}
+					break;
+				}
+				case 'S':{
+					shiftY += robot.getStepVal();
+					robot.setXDisp(robot.getXMap() * TILE_SIZE);
+					robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
+					if (shiftY >= TILE_SIZE) {
+						shiftY = 0;
+						robot.setyMap(robot.getYMap() + 1);
+						isWalking = false;
+					}
+					break;
+				}
+				case 'E':{
+					shiftX += robot.getStepVal();
+					robot.setXDisp(robot.getXMap() * TILE_SIZE + shiftX);
+					robot.setYDisp(robot.getYMap() * TILE_SIZE);
+					if (shiftX >= TILE_SIZE) {
+						shiftX = 0;
+						robot.setxMap(robot.getXMap() + 1);
+						isWalking = false;
+					}
+					break;
+				}
+				}
+				robot.getSprite().update(delta);
+			}
+
+		} else if (input.isKeyDown(Input.KEY_G)) {
+			isMoving = true;
+
+//			Stain endStain = getNearestStain();
+			Stain endStain = unvisitedStains.get(0);
+
+			movesList = PathMaker.makePath(robot.getXMap(), robot.getYMap(),
+					robot.getDirection(), endStain.getXPos(),
+					endStain.getYPos());
+
+		} else if (input.isKeyDown(Input.KEY_UP)) {
 			robot.setSpriteUp();// set sprite
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap() - 1][robot.getXMap()] == '1')) {
 				shiftY -= robot.getStepVal();
-				robot.setXDisp(robot.getXMap() * TILE_SIZE); 
+				robot.setXDisp(robot.getXMap() * TILE_SIZE);
 				robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 				if (shiftY <= (-1 * TILE_SIZE)) {
 					shiftY = 0;
-					// mapTab[yMap][xMap] = '0';
-					robot.setyMap(robot.getYMap() - 1); 
-					// mapTab[yMap][xMap] = '2';
+					robot.setyMap(robot.getYMap() - 1);
 				}
 			}
 
@@ -179,13 +274,11 @@ public class GarbageRobot extends BasicGame {
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap() + 1][robot.getXMap()] == '1')) {
 				shiftY += robot.getStepVal();
-				robot.setXDisp(robot.getXMap()*TILE_SIZE);
-				robot.setYDisp(robot.getYMap()* TILE_SIZE + shiftY);
+				robot.setXDisp(robot.getXMap() * TILE_SIZE);
+				robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 				if (shiftY >= TILE_SIZE) {
 					shiftY = 0;
-					// mapTab[yMap][xMap] = '0';
 					robot.setyMap(robot.getYMap() + 1);
-					// mapTab[yMap][xMap] = '2';
 				}
 			}
 
@@ -198,9 +291,7 @@ public class GarbageRobot extends BasicGame {
 				robot.setYDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX <= (-1 * TILE_SIZE)) {
 					shiftX = 0;
-					// mapTab[yMap][xMap] = '0';
 					robot.setxMap(robot.getXMap() - 1);
-					// mapTab[yMap][xMap] = '2';
 				}
 			}
 		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
@@ -212,9 +303,7 @@ public class GarbageRobot extends BasicGame {
 				robot.setYDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX >= TILE_SIZE) {
 					shiftX = 0;
-					// mapTab[yMap][xMap] = '0';
 					robot.setxMap(robot.getXMap() + 1);
-					// mapTab[yMap][xMap] = '2';
 				}
 			}
 		} else {
@@ -229,6 +318,29 @@ public class GarbageRobot extends BasicGame {
 		}
 	}
 
+	private Stain getNearestStain() {
+		int index;
+		int distance;
+		Stain stain;
+		if (!unvisitedStains.isEmpty()) {
+			stain = unvisitedStains.get(0);
+			index = 0;
+			distance = Math.abs(stain.getXPos() - robot.getXMap())
+					+ Math.abs(stain.getYPos() - robot.getYMap()) * 10;
+			for (int i = 1; i <= unvisitedStains.size(); i++) {
+				stain = unvisitedStains.get(i);
+				if (distance < Math.abs(stain.getXPos() - robot.getXMap())
+						+ Math.abs(stain.getYPos() - robot.getYMap()) * 10) {
+					index = i;
+					distance = Math.abs(stain.getXPos() - robot.getXMap())
+							+ Math.abs(stain.getYPos() - robot.getYMap()) * 10;
+				}
+			}
+			return unvisitedStains.remove(index);
+		} else
+			return null;
+	}
+
 	// method returns Stain by position.
 	private Stain getStainByPosition(int xPos, int yPos) {
 		Stain ret = null;
@@ -237,7 +349,32 @@ public class GarbageRobot extends BasicGame {
 				ret = stain;
 			}
 		}
+
 		return ret;
+	}
+
+	public static int getTilesX() {
+		return tilesX;
+	}
+
+	public static void setTilesX(int tilesX) {
+		GarbageRobot.tilesX = tilesX;
+	}
+
+	public static int getTilesY() {
+		return tilesY;
+	}
+
+	public static void setTilesY(int tilesY) {
+		GarbageRobot.tilesY = tilesY;
+	}
+
+	public static char[][] getMapTab() {
+		return mapTab;
+	}
+
+	public static void setMapTab(char[][] mapTab) {
+		GarbageRobot.mapTab = mapTab;
 	}
 
 }
