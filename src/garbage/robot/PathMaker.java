@@ -43,20 +43,13 @@ public class PathMaker {
 		State currentState = null;
 		boolean finish = false;
 		while (!openedStates.isEmpty() && !finish) {
-			System.out.println(openedStates.size());
 			currentState = openedStates.poll();
 			closedStates.add(currentState);
-
-			System.out.print("State: " + currentState.getX() + " "
-					+ currentState.getY() + " " + currentState.getDirection());
-			System.out.println(" Stain: " + currentStain.getXPos() + " "
-					+ currentStain.getYPos());
 			if ((currentState.getX() == currentStain.getXPos())
 					&& (currentState.getY() == currentStain.getYPos())) {
 				generatePathStack(currentState);
-				System.out.println("Stack size: " + stateStack.size());
 				generateMoves();
-				testMoves();
+//				testMoves();
 				return moves;
 			}
 
@@ -283,7 +276,6 @@ public class PathMaker {
 			break;
 		}
 		}
-		System.out.println("Successors: " + ret.size());
 		return ret;
 	}
 

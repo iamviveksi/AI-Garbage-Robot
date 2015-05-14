@@ -33,14 +33,14 @@ public class GarbageRobot extends BasicGame {
 	private static LinkedList<Move> movesList;
 	private static boolean isMoving = false;
 	private static boolean isWalking = false;
-	private Weka weka = null; 
+	private Weka weka = null;
+
 	public GarbageRobot() {
 		// text in the main window
 		super("Garbage Robot AI");
 	}
 
 	// start the GAME!
-
 
 	public static void main(String[] arguments) throws SlickException {
 		robot = new Sprite();
@@ -120,7 +120,7 @@ public class GarbageRobot extends BasicGame {
 				if (mapTab[j][i] == 'S') {
 					Stain stain = getStainByPosition(i, j);
 					Image image = new Image(stain.getImage());
-					g.drawImage(image, i * 32, j * 32); 
+					g.drawImage(image, i * 32, j * 32);
 				}
 			}
 		robot.getSprite();
@@ -128,13 +128,13 @@ public class GarbageRobot extends BasicGame {
 		robot.getYDisp();
 		robot.getSprite().draw(robot.getXDisp(), robot.getYDisp());
 
-
 		g.drawString("PosX: " + robot.getXDisp(), 1050f, 30f);
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 50f);
 		g.drawString("-------------", 1050f, 70f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 
-			Stain actStain = getStainByPosition(robot.getXMap(), robot.getYMap());
+			Stain actStain = getStainByPosition(robot.getXMap(),
+					robot.getYMap());
 			try {
 				String classItem = weka.predictItem(actStain);
 				actStain.setType(classItem);
@@ -142,7 +142,6 @@ public class GarbageRobot extends BasicGame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 90f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
@@ -161,33 +160,22 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 290f);
 			g.drawString("Density: " + actStain.getDensity(), 1050f, 310f);
 			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
-			
-			//smth todo
+
+			// smth todo
 		}
 	}
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		try {
-			weka = new Weka("poligon/data-learning.arff", "poligon/data-test.arff");
+			weka = new Weka("poligon/data-learning.arff",
+					"poligon/data-test.arff");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.err.println("INIT");
 		robot.init(4, 4);
-
-		// test Path
-		// Stain testStain = unvisitedStains.get(0);
-		Stain testStain = new Stain();
-		testStain.setXPos(4);
-		testStain.setYPos(10);
-		System.out.println("CEL: x-" + testStain.getXPos() + " y-"
-				+ testStain.getYPos());
-		PathMaker.makePath(robot.getXMap(), robot.getYMap(),
-				robot.getDirection(), testStain.getXPos(), testStain.getYPos());
-
-		// /
 
 		floor = new Image("data/grass.png");
 		obstacle = new Image("data/smallRocks.png");
