@@ -138,6 +138,7 @@ public class GarbageRobot extends BasicGame {
 			try {
 				String classItem = weka.predictItem(actStain);
 				actStain.setType(classItem);
+				actStain.setImage("data/" + classItem + ".png");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -177,7 +178,7 @@ public class GarbageRobot extends BasicGame {
 		System.err.println("INIT");
 		robot.init(4, 4);
 
-		floor = new Image("data/grass.png");
+		floor = new Image("data/floor.png");
 		obstacle = new Image("data/smallRocks.png");
 		stainPic = new Image("data/stain.png");
 		// mapTab[yMap][xMap] = 2;
