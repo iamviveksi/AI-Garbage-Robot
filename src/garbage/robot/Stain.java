@@ -27,7 +27,7 @@ public class Stain {
 	
 	//constructor
 	
-	public Stain() throws SlickException{
+	public Stain(){
 		drawParams();
 	}
 	
@@ -35,7 +35,7 @@ public class Stain {
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
 			boolean isGreasy, int roughness, int dangerousBacteries, int height,
-			boolean isFruity, int density, String type, String image) throws SlickException {
+			boolean isFruity, int density, String type, String image) {
 		super();
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -56,7 +56,7 @@ public class Stain {
 	}
 	
 	//method draw params for pain
-	private void drawParams() throws SlickException{
+	private void drawParams() {
 		Random generator = new Random();
 		this.wetness = generator.nextInt(100);
 		this.colorIntensity =  generator.nextInt(100);
