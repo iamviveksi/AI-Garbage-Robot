@@ -14,7 +14,7 @@ public class Stain {
 	private boolean isGreasy;
 	private int roughness;
 	private int dangerousBacteries;
-	private int height;
+	private boolean isTall;
 	private boolean isFruity;
 	private int density;
 	private String type;
@@ -33,7 +33,7 @@ public class Stain {
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
 			boolean isGreasy, int roughness, int dangerousBacteries,
-			int height, boolean isFruity, int density, String type, String base, int age, String tool, String detergent, String image) {
+			boolean isTall, boolean isFruity, int density, String type, String base, int age, String tool, String detergent, String image) {
 		super();
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -46,7 +46,7 @@ public class Stain {
 		this.isGreasy = isGreasy;
 		this.roughness = roughness;
 		this.dangerousBacteries = dangerousBacteries;
-		this.height = height;
+		this.isTall = isTall;
 		this.isFruity = isFruity;
 		this.density = density;
 		this.type = type;
@@ -85,7 +85,7 @@ public class Stain {
 		this.isGreasy = generator.nextBoolean();
 		this.roughness = generator.nextInt(100);
 		this.dangerousBacteries = generator.nextInt(100);
-		this.height = generator.nextInt(100);
+		this.isTall = generator.nextBoolean();
 		this.isFruity = generator.nextBoolean();
 		this.density = generator.nextInt(100);
 		this.base = "floor";
@@ -119,8 +119,8 @@ public class Stain {
 				+ ", smellIntensity=" + smellIntensity + ", isSticky="
 				+ isSticky + ", size=" + size + ", isDried=" + isDried
 				+ ", isGreasy=" + isGreasy + ", roughness=" + roughness
-				+ ", dangerousBacteries=" + dangerousBacteries + ", height="
-				+ height + ", isFruity=" + isFruity + ", density=" + density
+				+ ", dangerousBacteries=" + dangerousBacteries + ", isTall="
+				+ isTall + ", isFruity=" + isFruity + ", density=" + density
 				+ "]";
 	}
 
@@ -205,12 +205,12 @@ public class Stain {
 		this.dangerousBacteries = dangerousBacteries;
 	}
 
-	public int getHeight() {
-		return height;
+	public boolean isTall() {
+		return isTall;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
+	public void setTall(boolean isTall) {
+		this.isTall = isTall;
 	}
 
 	public boolean isFruity() {

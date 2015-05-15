@@ -200,7 +200,7 @@ public class GarbageRobot extends BasicGame {
 			g.setColor(Color.red);
 			g.drawString("TYPE: " + actStain.getType(), 1050f, 270f);
 			g.setColor(Color.white);
-			g.drawString("Height: " + actStain.getHeight(), 1050f, 310f);
+			g.drawString("Height: " + actStain.isTall(), 1050f, 310f);
 			g.drawString("Size: " + actStain.getSize(), 1050f, 330f);
 			g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
 			g.setColor(Color.red);
