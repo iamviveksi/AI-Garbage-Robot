@@ -137,7 +137,8 @@ public class Weka {
 	{
 		BufferedWriter writer = null;		
 		writer = new BufferedWriter(new FileWriter(treeGraph));
-		writer.write(tree.graph());		
+		writer.write(tree.toString()  + "\n\n" + tree.graph());
+		//writer.write(tree.graph());		
 		writer.close();
 	}
 	

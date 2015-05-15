@@ -171,6 +171,8 @@ public class GarbageRobot extends BasicGame {
 		try {
 			weka = new Weka("poligon/data-learning.arff",
 					"poligon/data-test.arff");
+			weka.writePredictions("poligon/data-predicted.arff");
+			weka.writeTree("poligon/tree.txt");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

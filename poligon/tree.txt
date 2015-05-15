@@ -1,0 +1,126 @@
+J48 pruned tree
+------------------
+
+isSticky = true
+|   isGreasy = true
+|   |   isFruity = true: cake (5.0)
+|   |   isFruity = false
+|   |   |   density <= 86
+|   |   |   |   dangerousBacteries <= 36
+|   |   |   |   |   wetness <= 30: glue (5.0)
+|   |   |   |   |   wetness > 30
+|   |   |   |   |   |   wetness <= 62: oil (5.0)
+|   |   |   |   |   |   wetness > 62: dressing (5.0)
+|   |   |   |   dangerousBacteries > 36: sauce (5.0)
+|   |   |   density > 86: lubricant (5.0)
+|   isGreasy = false
+|   |   isFruity = true: rot (5.0)
+|   |   isFruity = false
+|   |   |   smellIntensity <= 21
+|   |   |   |   roughness <= 7: blood (5.0)
+|   |   |   |   roughness > 7: mud (5.0)
+|   |   |   smellIntensity > 21
+|   |   |   |   wetness <= 30: paste (5.0)
+|   |   |   |   wetness > 30: fungus (5.0)
+isSticky = false
+|   smellIntensity <= 8
+|   |   density <= 33
+|   |   |   roughness <= 39
+|   |   |   |   colorIntensity <= 50: water (5.0)
+|   |   |   |   colorIntensity > 50: ink (5.0)
+|   |   |   roughness > 39: sand (5.0)
+|   |   density > 33
+|   |   |   colorIntensity <= 53: glass (5.0)
+|   |   |   colorIntensity > 53: paper (5.0)
+|   smellIntensity > 8
+|   |   isFruity = true
+|   |   |   dangerousBacteries <= 2: wine (5.0)
+|   |   |   dangerousBacteries > 2: grass (5.0)
+|   |   isFruity = false
+|   |   |   wetness <= 43: dust (5.0)
+|   |   |   wetness > 43: coffee (5.0)
+
+Number of Leaves  : 	20
+
+Size of the tree : 	39
+
+
+digraph J48Tree {
+N0 [label="isSticky" ]
+N0->N1 [label="'= true'"]
+N1 [label="isGreasy" ]
+N1->N2 [label="'= true'"]
+N2 [label="isFruity" ]
+N2->N3 [label="'= true'"]
+N3 [label="'cake (5.0)'" shape=box style=filled ]
+N2->N4 [label="'= false'"]
+N4 [label="density" ]
+N4->N5 [label="'<= 86'"]
+N5 [label="dangerousBacteries" ]
+N5->N6 [label="'<= 36'"]
+N6 [label="wetness" ]
+N6->N7 [label="'<= 30'"]
+N7 [label="'glue (5.0)'" shape=box style=filled ]
+N6->N8 [label="'> 30'"]
+N8 [label="wetness" ]
+N8->N9 [label="'<= 62'"]
+N9 [label="'oil (5.0)'" shape=box style=filled ]
+N8->N10 [label="'> 62'"]
+N10 [label="'dressing (5.0)'" shape=box style=filled ]
+N5->N11 [label="'> 36'"]
+N11 [label="'sauce (5.0)'" shape=box style=filled ]
+N4->N12 [label="'> 86'"]
+N12 [label="'lubricant (5.0)'" shape=box style=filled ]
+N1->N13 [label="'= false'"]
+N13 [label="isFruity" ]
+N13->N14 [label="'= true'"]
+N14 [label="'rot (5.0)'" shape=box style=filled ]
+N13->N15 [label="'= false'"]
+N15 [label="smellIntensity" ]
+N15->N16 [label="'<= 21'"]
+N16 [label="roughness" ]
+N16->N17 [label="'<= 7'"]
+N17 [label="'blood (5.0)'" shape=box style=filled ]
+N16->N18 [label="'> 7'"]
+N18 [label="'mud (5.0)'" shape=box style=filled ]
+N15->N19 [label="'> 21'"]
+N19 [label="wetness" ]
+N19->N20 [label="'<= 30'"]
+N20 [label="'paste (5.0)'" shape=box style=filled ]
+N19->N21 [label="'> 30'"]
+N21 [label="'fungus (5.0)'" shape=box style=filled ]
+N0->N22 [label="'= false'"]
+N22 [label="smellIntensity" ]
+N22->N23 [label="'<= 8'"]
+N23 [label="density" ]
+N23->N24 [label="'<= 33'"]
+N24 [label="roughness" ]
+N24->N25 [label="'<= 39'"]
+N25 [label="colorIntensity" ]
+N25->N26 [label="'<= 50'"]
+N26 [label="'water (5.0)'" shape=box style=filled ]
+N25->N27 [label="'> 50'"]
+N27 [label="'ink (5.0)'" shape=box style=filled ]
+N24->N28 [label="'> 39'"]
+N28 [label="'sand (5.0)'" shape=box style=filled ]
+N23->N29 [label="'> 33'"]
+N29 [label="colorIntensity" ]
+N29->N30 [label="'<= 53'"]
+N30 [label="'glass (5.0)'" shape=box style=filled ]
+N29->N31 [label="'> 53'"]
+N31 [label="'paper (5.0)'" shape=box style=filled ]
+N22->N32 [label="'> 8'"]
+N32 [label="isFruity" ]
+N32->N33 [label="'= true'"]
+N33 [label="dangerousBacteries" ]
+N33->N34 [label="'<= 2'"]
+N34 [label="'wine (5.0)'" shape=box style=filled ]
+N33->N35 [label="'> 2'"]
+N35 [label="'grass (5.0)'" shape=box style=filled ]
+N32->N36 [label="'= false'"]
+N36 [label="wetness" ]
+N36->N37 [label="'<= 43'"]
+N37 [label="'dust (5.0)'" shape=box style=filled ]
+N36->N38 [label="'> 43'"]
+N38 [label="'coffee (5.0)'" shape=box style=filled ]
+}
