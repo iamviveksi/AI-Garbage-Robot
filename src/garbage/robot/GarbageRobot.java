@@ -134,7 +134,7 @@ public class GarbageRobot extends BasicGame {
 					robot.getYMap());
 			try {
 				if (!robot.isMoving()) {
-					String classItem = weka.predictItem(actStain);
+					String classItem = weka.predictItem(actStain, "poligon/stain/data-one.arff");
 					actStain.setType(classItem);
 					actStain.setImage("data/" + classItem + ".png");
 				}
@@ -168,10 +168,10 @@ public class GarbageRobot extends BasicGame {
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		try {
-			weka = new Weka("poligon/data-learning.arff",
-					"poligon/data-test.arff");
-			weka.writePredictions("poligon/data-predicted.arff");
-			weka.writeTree("poligon/tree.txt");
+			weka = new Weka("poligon/stain/data-learning.arff",
+					"poligon/stain/data-test.arff");
+			weka.writePredictions("poligon/stain/data-predicted.arff");
+			weka.writeTree("poligon/stain/tree.txt");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
