@@ -17,8 +17,7 @@ import org.newdawn.slick.SlickException;
 //need to extend BasicGame
 
 public class GarbageRobot extends BasicGame {
-	private Image floor;
-	private Image obstacle;
+	private Image floor, obstacle, carpet, carpetCotton, wood;
 	private static Sprite robot;
 	private static final int TILE_SIZE = 32;
 	private static int tilesX;
@@ -109,17 +108,47 @@ public class GarbageRobot extends BasicGame {
 			throws SlickException {
 		// floor
 
-		for (int i = 0; i < 1024; i += 128)
-			for (int j = 0; j < 640; j += 128)
+		for (int i = 0; i < 1024; i += 32)
+			for (int j = 0; j < 640; j += 32)
+				g.drawImage(wood, i, j);
+		
+		for (int i = 32; i <= 320; i += 32)
+			for (int j = 32; j <= 256; j += 32)
+				g.drawImage(carpetCotton, i, j);
+		
+		for (int i = 0; i <= 320; i += 32)
+			for (int j = 352; j <= 576; j += 32)
+				g.drawImage(carpet, i, j);
+		
+		for (int i = 512; i <= 960; i += 32)
+			for (int j = 384; j <= 576; j += 32)
 				g.drawImage(floor, i, j);
 
 		for (int i = 0; i < tilesX; i++)
 			for (int j = 0; j < tilesY; j++) {
+				if (mapTab[j][i] == '0') {
+					g.drawImage(wood, i * 32, j * 32);
+				}
 				if (mapTab[j][i] == '1') {
 					g.drawImage(obstacle, i * 32, j * 32);
 				}
+				if (mapTab[j][i] == '2') {
+					g.drawImage(carpet, i * 32, j * 32);
+				}
+				if (mapTab[j][i] == '3') {
+					g.drawImage(carpetCotton, i * 32, j * 32);
+				}
+				if (mapTab[j][i] == '4') {
+					g.drawImage(floor, i * 32, j * 32);
+				}
 				if (mapTab[j][i] == 'S') {
+					int a = i * 32;
+					int b = j * 32;
 					Stain stain = getStainByPosition(i, j);
+					if(a >= 512 && a <=960 && b >= 384 && b <= 576) stain.setBase("floor");
+					else if(a >= 0 && a <= 320 && b >= 352 && b <=576) stain.setBase("carpet");
+					else if(a >= 32 && a <= 320 && b >= 32 && b <= 256) stain.setBase("carpetCotton");
+					else stain.setBase("wood");
 					Image image = new Image(stain.getImage());
 					g.drawImage(image, i * 32, j * 32);
 				}
@@ -213,6 +242,9 @@ public class GarbageRobot extends BasicGame {
 		floor = new Image("data/floor.png");
 		obstacle = new Image("data/wall.png");
 		stainPic = new Image("data/stain.png");
+		carpet = new Image("data/carpet.png");
+		carpetCotton = new Image("data/carpetCotton.png");
+		wood = new Image("data/wood.png");
 		// mapTab[yMap][xMap] = 2;
 	}
 
