@@ -268,7 +268,12 @@ public class GarbageRobot extends BasicGame {
 						robot.getYMap(), robot.getDirection(),
 						endStain.getXPos(), endStain.getYPos());
 
-		} else if (input.isKeyDown(Input.KEY_UP)) {
+		} else if (input.isKeyPressed(Input.KEY_N)) {
+			//todo: CLEANING
+			readMapFromFile();
+			generateStains();
+			
+		}	else if (input.isKeyDown(Input.KEY_UP)) {
 			robot.setSpriteUp();// set sprite
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap() - 1][robot.getXMap()] == '1')) {
