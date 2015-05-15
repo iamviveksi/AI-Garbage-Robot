@@ -13,8 +13,12 @@ public class Sprite {
 	private float xDisp;
 	private float yDisp;
 	private Move currentMove;
+	private int xBase;
+	private int yBase;
 
 	public void init(int xMap, int yMap) throws SlickException {
+		this.xBase = xMap;
+		this.yBase = yMap;
 		this.xMap = xMap;
 		this.yMap = yMap;
 		xDisp = 32 * xMap;
@@ -155,6 +159,14 @@ public class Sprite {
 
 	public void setYDisp(float yDisp) {
 		this.yDisp = yDisp;
+	}
+
+	public int getXBase() {
+		return xBase;
+	}
+
+	public int getYBase() {
+		return yBase;
 	}
 
 	public void turnLeft() {

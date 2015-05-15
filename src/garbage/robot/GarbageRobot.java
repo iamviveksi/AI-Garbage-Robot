@@ -33,6 +33,7 @@ public class GarbageRobot extends BasicGame {
 	private static LinkedList<Move> movesList;
 	private static boolean isMoving = false;
 	private static boolean isWalking = false;
+	private static boolean isInBase = false;
 	private Weka weka = null;
 
 	public GarbageRobot() {
@@ -136,9 +137,11 @@ public class GarbageRobot extends BasicGame {
 			Stain actStain = getStainByPosition(robot.getXMap(),
 					robot.getYMap());
 			try {
-				String classItem = weka.predictItem(actStain);
-				actStain.setType(classItem);
-				actStain.setImage("data/" + classItem + ".png");
+				if (!isMoving) {
+					String classItem = weka.predictItem(actStain);
+					actStain.setType(classItem);
+					actStain.setImage("data/" + classItem + ".png");
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -208,6 +211,12 @@ public class GarbageRobot extends BasicGame {
 						isWalking = true;
 					}
 				} else {
+					if(!isInBase){
+						movesList = PathMaker.makePath(robot.getXMap(),
+								robot.getYMap(), robot.getDirection(),
+								robot.getXBase(), robot.getYBase());
+						isInBase = true;
+					}
 					isMoving = false;
 				}
 			} else { // when robot isWalking
@@ -262,6 +271,7 @@ public class GarbageRobot extends BasicGame {
 
 		} else if (input.isKeyDown(Input.KEY_G)) {
 			isMoving = true;
+			isInBase = false;
 
 			Stain endStain = getNearestStain();
 			// Stain endStain = unvisitedStains.get(0);
@@ -271,11 +281,11 @@ public class GarbageRobot extends BasicGame {
 						endStain.getXPos(), endStain.getYPos());
 
 		} else if (input.isKeyPressed(Input.KEY_N)) {
-			//todo: CLEANING
+			// todo: CLEANING
 			readMapFromFile();
 			generateStains();
-			
-		}	else if (input.isKeyDown(Input.KEY_UP)) {
+
+		} else if (input.isKeyDown(Input.KEY_UP)) {
 			robot.setSpriteUp();// set sprite
 			robot.getSprite().update(delta);
 			if (!(mapTab[robot.getYMap() - 1][robot.getXMap()] == '1')) {
