@@ -15,6 +15,9 @@ public class Sprite {
 	private Move currentMove;
 	private int xBase;
 	private int yBase;
+	private boolean isMoving = false;
+	private boolean isWalking = false;
+	private boolean isInBase = false;
 
 	public void init(int xMap, int yMap) throws SlickException {
 		this.xBase = xMap;
@@ -133,7 +136,7 @@ public class Sprite {
 		return xMap;
 	}
 
-	public void setxMap(int xMap) {
+	public void setXMap(int xMap) {
 		this.xMap = xMap;
 	}
 
@@ -141,7 +144,7 @@ public class Sprite {
 		return yMap;
 	}
 
-	public void setyMap(int yMap) {
+	public void setYMap(int yMap) {
 		this.yMap = yMap;
 	}
 
@@ -167,6 +170,30 @@ public class Sprite {
 
 	public int getYBase() {
 		return yBase;
+	}
+
+	public boolean isWalking() {
+		return isWalking;
+	}
+
+	public void setWalking(boolean isWalking) {
+		this.isWalking = isWalking;
+	}
+
+	public boolean isInBase() {
+		return isInBase;
+	}
+
+	public void setInBase(boolean isInBase) {
+		this.isInBase = isInBase;
+	}
+
+	public boolean isMoving() {
+		return isMoving;
+	}
+
+	public void setMoving(boolean isMoving) {
+		this.isMoving = isMoving;
 	}
 
 	public void turnLeft() {

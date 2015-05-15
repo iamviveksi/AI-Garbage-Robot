@@ -25,15 +25,11 @@ public class GarbageRobot extends BasicGame {
 	private static char[][] mapTab;
 	private float shiftY = 0;
 	private float shiftX = 0;
-	private Image stainPic;
 	private static int numberOfStains;
 	private static List<Stain> stainList;
-
+	private Image stainPic;
 	private static List<Stain> unvisitedStains;
 	private static LinkedList<Move> movesList;
-	private static boolean isMoving = false;
-	private static boolean isWalking = false;
-	private static boolean isInBase = false;
 	private Weka weka = null;
 
 	public GarbageRobot() {
@@ -137,7 +133,7 @@ public class GarbageRobot extends BasicGame {
 			Stain actStain = getStainByPosition(robot.getXMap(),
 					robot.getYMap());
 			try {
-				if (!isMoving) {
+				if (!robot.isMoving()) {
 					String classItem = weka.predictItem(actStain);
 					actStain.setType(classItem);
 					actStain.setImage("data/" + classItem + ".png");
@@ -195,8 +191,8 @@ public class GarbageRobot extends BasicGame {
 			throws SlickException {
 		Input input = container.getInput();
 
-		if (isMoving) {
-			if (!isWalking) {
+		if (robot.isMoving()) {
+			if (!robot.isWalking()) {
 				if (!movesList.isEmpty()) {
 					robot.setCurrentMove(movesList.poll());
 					if (robot.getCurrentMove() == Move.LEFT) {
@@ -208,16 +204,10 @@ public class GarbageRobot extends BasicGame {
 						robot.getSprite().update(delta);
 					}
 					if (robot.getCurrentMove() == Move.GO) {
-						isWalking = true;
+						robot.setWalking(true);
 					}
 				} else {
-					if(!isInBase){
-						movesList = PathMaker.makePath(robot.getXMap(),
-								robot.getYMap(), robot.getDirection(),
-								robot.getXBase(), robot.getYBase());
-						isInBase = true;
-					}
-					isMoving = false;
+					robot.setMoving(false);
 				}
 			} else { // when robot isWalking
 				switch (robot.getDirection()) {
@@ -227,8 +217,8 @@ public class GarbageRobot extends BasicGame {
 					robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 					if (shiftY <= (-1 * TILE_SIZE)) {
 						shiftY = 0;
-						robot.setyMap(robot.getYMap() - 1);
-						isWalking = false;
+						robot.setYMap(robot.getYMap() - 1);
+						robot.setWalking(false);
 					}
 					break;
 				}
@@ -238,8 +228,8 @@ public class GarbageRobot extends BasicGame {
 					robot.setYDisp(robot.getYMap() * TILE_SIZE);
 					if (shiftX <= (-1 * TILE_SIZE)) {
 						shiftX = 0;
-						robot.setxMap(robot.getXMap() - 1);
-						isWalking = false;
+						robot.setXMap(robot.getXMap() - 1);
+						robot.setWalking(false);
 					}
 					break;
 				}
@@ -249,8 +239,8 @@ public class GarbageRobot extends BasicGame {
 					robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 					if (shiftY >= TILE_SIZE) {
 						shiftY = 0;
-						robot.setyMap(robot.getYMap() + 1);
-						isWalking = false;
+						robot.setYMap(robot.getYMap() + 1);
+						robot.setWalking(false);
 					}
 					break;
 				}
@@ -260,8 +250,8 @@ public class GarbageRobot extends BasicGame {
 					robot.setYDisp(robot.getYMap() * TILE_SIZE);
 					if (shiftX >= TILE_SIZE) {
 						shiftX = 0;
-						robot.setxMap(robot.getXMap() + 1);
-						isWalking = false;
+						robot.setXMap(robot.getXMap() + 1);
+						robot.setWalking(false);
 					}
 					break;
 				}
@@ -270,15 +260,25 @@ public class GarbageRobot extends BasicGame {
 			}
 
 		} else if (input.isKeyDown(Input.KEY_G)) {
-			isMoving = true;
-			isInBase = false;
-
-			Stain endStain = getNearestStain();
-			// Stain endStain = unvisitedStains.get(0);
-			if (endStain != null)
-				movesList = PathMaker.makePath(robot.getXMap(),
-						robot.getYMap(), robot.getDirection(),
-						endStain.getXPos(), endStain.getYPos());
+			if (unvisitedStains.isEmpty()) {
+				if (!robot.isInBase()) {
+					robot.setMoving(true);
+					movesList = PathMaker.makePath(robot.getXMap(),
+							robot.getYMap(), robot.getDirection(),
+							robot.getXBase(), robot.getYBase());
+					robot.setInBase(true);
+				} else
+					robot.setMoving(false);
+			} else {
+				robot.setInBase(false);
+				robot.setMoving(true);
+				Stain endStain = getNearestStain();
+				// Stain endStain = unvisitedStains.get(0);
+				if (endStain != null)
+					movesList = PathMaker.makePath(robot.getXMap(),
+							robot.getYMap(), robot.getDirection(),
+							endStain.getXPos(), endStain.getYPos());
+			}
 
 		} else if (input.isKeyPressed(Input.KEY_N)) {
 			// todo: CLEANING
@@ -294,7 +294,7 @@ public class GarbageRobot extends BasicGame {
 				robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 				if (shiftY <= (-1 * TILE_SIZE)) {
 					shiftY = 0;
-					robot.setyMap(robot.getYMap() - 1);
+					robot.setYMap(robot.getYMap() - 1);
 				}
 			}
 
@@ -307,7 +307,7 @@ public class GarbageRobot extends BasicGame {
 				robot.setYDisp(robot.getYMap() * TILE_SIZE + shiftY);
 				if (shiftY >= TILE_SIZE) {
 					shiftY = 0;
-					robot.setyMap(robot.getYMap() + 1);
+					robot.setYMap(robot.getYMap() + 1);
 				}
 			}
 
@@ -320,7 +320,7 @@ public class GarbageRobot extends BasicGame {
 				robot.setYDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX <= (-1 * TILE_SIZE)) {
 					shiftX = 0;
-					robot.setxMap(robot.getXMap() - 1);
+					robot.setXMap(robot.getXMap() - 1);
 				}
 			}
 		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
@@ -332,7 +332,7 @@ public class GarbageRobot extends BasicGame {
 				robot.setYDisp(robot.getYMap() * TILE_SIZE);
 				if (shiftX >= TILE_SIZE) {
 					shiftX = 0;
-					robot.setxMap(robot.getXMap() + 1);
+					robot.setXMap(robot.getXMap() + 1);
 				}
 			}
 		} else {
