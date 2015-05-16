@@ -35,6 +35,7 @@ public class GarbageRobot extends BasicGame {
 	private Weka wekaEquipment = null;
 	private String tools = "";
 	private String detergents = "";
+	private String backpack = "";
 	
 
 	public GarbageRobot() {
@@ -166,7 +167,7 @@ public class GarbageRobot extends BasicGame {
 		g.setColor(Color.green);
 		g.drawString("BACKPACK: ", 1050f, 510f);
 		g.setColor(Color.white);
-		g.drawString(tools + detergents, 1050f, 530f);
+		g.drawString(backpack, 1050f, 530f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 
 			Stain actStain = getStainByPosition(robot.getXMap(),
@@ -179,14 +180,18 @@ public class GarbageRobot extends BasicGame {
 					
 					String detergent = wekaDetergent.predictDetergent(actStain, "poligon/detergent/data-one.arff");
 					actStain.setDetergent(detergent);
-					detergents = detergents + detergent + "\n";
+					if(!detergents.contains(detergent)) detergents = detergents + detergent + "\n";
+					
+					String equipment = wekaEquipment.predictEquipment(actStain, "poligon/equipment/data-one.arff");
+					actStain.setTool(equipment);
+					if(!tools.contains(equipment)) tools = tools + equipment + "\n";
+
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			//g.setFont(font);
 			g.setColor(Color.white);
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 70f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(), 1050f, 90f);
@@ -200,29 +205,32 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Density: " + actStain.getDensity(), 1050f, 250f);
 			g.setColor(Color.red);
 			g.drawString("TYPE: " + actStain.getType(), 1050f, 270f);
+			
 			g.setColor(Color.white);
-			g.drawString("Height: " + actStain.isTall(), 1050f, 310f);
-			g.drawString("Size: " + actStain.getSize(), 1050f, 330f);
+			g.drawString("Age: " + actStain.getAge(), 1050f, 310f);
+			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
 			g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
 			g.setColor(Color.red);
-			g.drawString("EQUIPMENT: ", 1050f, 370f);
+			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 370f);
+			
 			g.setColor(Color.white);
-			g.drawString("Age: " + actStain.getAge(), 1050f, 410f);
-			g.drawString("Type: " + actStain.getType(), 1050f, 430f);
+			g.drawString("Is Tall?: " + actStain.isTall(), 1050f, 410f);
+			g.drawString("Size: " + actStain.getSize(), 1050f, 430f);
+			g.drawString("Detergent: " + actStain.getDetergent(), 1050f, 450f);
 			g.setColor(Color.red);
-			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 450f);
+			g.drawString("EQUIPMENT: " + actStain.getTool(), 1050f, 470f);
+
 			g.setColor(Color.green);
 			g.drawString("BACKPACK: ", 1050f, 510f);
 			g.setColor(Color.white);
-			g.drawString(tools + detergents, 1050f, 530f);
+			g.drawString(backpack, 1050f, 530f);
 			
 		}
 		else {
-			g.drawString("Needed tools: ", 1050f, 70f);
-			g.drawString(tools, 1050f, 90f);
-			g.drawString("Needed detergents: ", 1050f, 150f);
-			g.drawString(detergents, 1050f, 170f);
-			
+			g.drawString("Needed detergents: ", 1050f, 70f);
+			g.drawString(detergents, 1050f, 90f);
+			g.drawString("Needed tools: ", 1050f, 210f);
+			g.drawString(tools, 1050f, 230f);			
 		}
 	}
 

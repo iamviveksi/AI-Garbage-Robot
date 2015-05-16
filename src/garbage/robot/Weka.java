@@ -168,6 +168,50 @@ public class Weka {
 		return itemClass;
 	}
 	
+	public String predictEquipment(Stain stain, String path) throws Exception
+	{
+		String itemClass = "";
+		String fileContent = 
+				"@relation equipment\n"
+				+ "@attribute detergent {airFreshener,alcohol,bakingSoda,cleaningMilk,dishSoap,floorSoap,fumigator,nothing,paste,soap,solvent,spray,vanish,vinegar,washingPowder,water}\n"
+				+ "@attribute isTall {true, false}\n"
+				+ "@attribute size numeric\n"
+				+ "@attribute class {besom,brush,grasper,pressureWasher,rubber,sandpaper,scraper,sponge,tweezer,vacuumCleaner}\n"
+				+ "\n"
+				+ "@data\n";
+		
+		String line = fileContent + stain.getDetergent() + "," + stain.isTall() + "," + stain.getSize() + ",?";
+		
+		BufferedWriter writer = null;	
+		writer = new BufferedWriter(new FileWriter(path));
+		writer.write(line);
+		writer.close();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(path));
+		Instances item = new Instances(reader);
+		item.setClassIndex(item.numAttributes() - 1);		
+		double clsLabel = tree.classifyInstance(item.instance(0));
+		item.instance(0).setClassValue(clsLabel);
+		reader.close();
+		
+		File file = new File(path);
+		file.delete();
+		
+		String itemLine = item.instance(0).toString();
+		if(itemLine.contains("besom")) itemClass = "besom";
+		else if(itemLine.contains("brush")) itemClass = "brush";
+		else if(itemLine.contains("grasper")) itemClass = "grasper";
+		else if(itemLine.contains("pressureWasher")) itemClass = "pressureWasher";
+		else if(itemLine.contains("rubber")) itemClass = "rubber";
+		else if(itemLine.contains("sandpaper")) itemClass = "sandpaper";
+		else if(itemLine.contains("scraper")) itemClass = "scraper";
+		else if(itemLine.contains("sponge")) itemClass = "sponge";
+		else if(itemLine.contains("tweezer")) itemClass = "tweezer";
+		else if(itemLine.contains("vacuumCleaner")) itemClass = "vacuumCleaner";
+		
+		return itemClass;
+	}
+	
 	public void writePredictions(String predictions) throws Exception
 	{	
 		if(predicted != null)
