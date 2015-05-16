@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -16,8 +17,7 @@ import org.newdawn.slick.SlickException;
 //need to extend BasicGame
 
 public class GarbageRobot extends BasicGame {
-	private Image floor;
-	private Image obstacle;
+	private Image floor, obstacle, carpet, carpetCotton, wood;
 	private static Sprite robot;
 	private static final int TILE_SIZE = 32;
 	private static int tilesX;
@@ -31,6 +31,9 @@ public class GarbageRobot extends BasicGame {
 	private static List<Stain> unvisitedStains;
 	private static LinkedList<Move> movesList;
 	private Weka weka = null;
+	private String tools = "";
+	private String detergents = "";
+	
 
 	public GarbageRobot() {
 		// text in the main window
@@ -105,17 +108,47 @@ public class GarbageRobot extends BasicGame {
 			throws SlickException {
 		// floor
 
-		for (int i = 0; i < 1024; i += 128)
-			for (int j = 0; j < 640; j += 128)
+		for (int i = 0; i < 1024; i += 32)
+			for (int j = 0; j < 640; j += 32)
+				g.drawImage(wood, i, j);
+		
+		for (int i = 32; i <= 320; i += 32)
+			for (int j = 32; j <= 256; j += 32)
+				g.drawImage(carpetCotton, i, j);
+		
+		for (int i = 0; i <= 320; i += 32)
+			for (int j = 352; j <= 576; j += 32)
+				g.drawImage(carpet, i, j);
+		
+		for (int i = 512; i <= 960; i += 32)
+			for (int j = 384; j <= 576; j += 32)
 				g.drawImage(floor, i, j);
 
 		for (int i = 0; i < tilesX; i++)
 			for (int j = 0; j < tilesY; j++) {
+				if (mapTab[j][i] == '0') {
+					g.drawImage(wood, i * 32, j * 32);
+				}
 				if (mapTab[j][i] == '1') {
 					g.drawImage(obstacle, i * 32, j * 32);
 				}
+				if (mapTab[j][i] == '2') {
+					g.drawImage(carpet, i * 32, j * 32);
+				}
+				if (mapTab[j][i] == '3') {
+					g.drawImage(carpetCotton, i * 32, j * 32);
+				}
+				if (mapTab[j][i] == '4') {
+					g.drawImage(floor, i * 32, j * 32);
+				}
 				if (mapTab[j][i] == 'S') {
+					int a = i * 32;
+					int b = j * 32;
 					Stain stain = getStainByPosition(i, j);
+					if(a >= 512 && a <=960 && b >= 384 && b <= 576) stain.setBase("floor");
+					else if(a >= 0 && a <= 320 && b >= 352 && b <=576) stain.setBase("carpet");
+					else if(a >= 32 && a <= 320 && b >= 32 && b <= 256) stain.setBase("carpetCotton");
+					else stain.setBase("wood");
 					Image image = new Image(stain.getImage());
 					g.drawImage(image, i * 32, j * 32);
 				}
@@ -125,16 +158,20 @@ public class GarbageRobot extends BasicGame {
 		robot.getYDisp();
 		robot.getSprite().draw(robot.getXDisp(), robot.getYDisp());
 
-		g.drawString("PosX: " + robot.getXDisp(), 1050f, 30f);
-		g.drawString("PosY: " + robot.getYDisp(), 1050f, 50f);
-		g.drawString("-------------", 1050f, 70f);
+		g.drawString("PosX: " + robot.getXDisp(), 1050f, 10f);
+		g.drawString("PosY: " + robot.getYDisp(), 1050f, 30f);
+		g.drawString("----------------------------", 1050f, 50f);
+		g.setColor(Color.green);
+		g.drawString("BACKPACK: ", 1050f, 510f);
+		g.setColor(Color.white);
+		g.drawString(tools + detergents, 1050f, 530f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 
 			Stain actStain = getStainByPosition(robot.getXMap(),
 					robot.getYMap());
 			try {
 				if (!robot.isMoving()) {
-					String classItem = weka.predictItem(actStain);
+					String classItem = weka.predictItem(actStain, "poligon/stain/data-one.arff");
 					actStain.setType(classItem);
 					actStain.setImage("data/" + classItem + ".png");
 				}
@@ -143,35 +180,58 @@ public class GarbageRobot extends BasicGame {
 				e.printStackTrace();
 			}
 
-			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 90f);
+			//g.setFont(font);
+			g.setColor(Color.white);
+			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 70f);
 			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
-					1050f, 110f);
+					1050f, 90f);
 			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(),
-					1050f, 130f);
-			g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 150f);
-			g.drawString("Size: " + actStain.getSize(), 1050f, 170f);
-			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 190f);
-			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 210f);
-			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 230f);
+					1050f, 110f);
+			g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 130f);
+			
+			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 150f);
+			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 170f);
+			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 190f);
 			g.drawString(
 					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
-					1050f, 250f);
-			g.drawString("Height: " + actStain.getHeight(), 1050f, 270f);
-			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 290f);
-			g.drawString("Density: " + actStain.getDensity(), 1050f, 310f);
-			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
-
-			// smth todo
+					1050f, 210f);			
+			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 230f);
+			g.drawString("Density: " + actStain.getDensity(), 1050f, 250f);
+			g.setColor(Color.red);
+			g.drawString("TYPE: " + actStain.getType(), 1050f, 270f);
+			g.setColor(Color.white);
+			g.drawString("Height: " + actStain.isTall(), 1050f, 310f);
+			g.drawString("Size: " + actStain.getSize(), 1050f, 330f);
+			g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
+			g.setColor(Color.red);
+			g.drawString("EQUIPMENT: ", 1050f, 370f);
+			g.setColor(Color.white);
+			g.drawString("Age: " + actStain.getAge(), 1050f, 410f);
+			g.drawString("Type: " + actStain.getType(), 1050f, 430f);
+			g.setColor(Color.red);
+			g.drawString("DETERGENT: ", 1050f, 450f);
+			g.setColor(Color.green);
+			g.drawString("BACKPACK: ", 1050f, 510f);
+			g.setColor(Color.white);
+			g.drawString(tools + detergents, 1050f, 530f);
+			
+		}
+		else {
+			g.drawString("Needed tools: ", 1050f, 70f);
+			g.drawString(tools, 1050f, 90f);
+			g.drawString("Needed detergents: ", 1050f, 150f);
+			g.drawString(detergents, 1050f, 170f);
+			
 		}
 	}
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		try {
-			weka = new Weka("poligon/data-learning.arff",
-					"poligon/data-test.arff");
-			weka.writePredictions("poligon/data-predicted.arff");
-			weka.writeTree("poligon/tree.txt");
+			weka = new Weka("poligon/stain/data-learning.arff",
+					"poligon/stain/data-test.arff");
+			weka.writePredictions("poligon/stain/data-predicted.arff");
+			weka.writeTree("poligon/stain/tree.txt");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -182,6 +242,9 @@ public class GarbageRobot extends BasicGame {
 		floor = new Image("data/floor.png");
 		obstacle = new Image("data/wall.png");
 		stainPic = new Image("data/stain.png");
+		carpet = new Image("data/carpet.png");
+		carpetCotton = new Image("data/carpetCotton.png");
+		wood = new Image("data/wood.png");
 		// mapTab[yMap][xMap] = 2;
 	}
 

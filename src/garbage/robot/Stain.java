@@ -14,10 +14,14 @@ public class Stain {
 	private boolean isGreasy;
 	private int roughness;
 	private int dangerousBacteries;
-	private int height;
+	private boolean isTall;
 	private boolean isFruity;
 	private int density;
 	private String type;
+	private String base;
+	private int age;
+	private String tool;
+	private String detergent;
 	private String image;
 
 	// constructor
@@ -29,7 +33,7 @@ public class Stain {
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
 			boolean isGreasy, int roughness, int dangerousBacteries,
-			int height, boolean isFruity, int density, String type, String image) {
+			boolean isTall, boolean isFruity, int density, String type, String base, int age, String tool, String detergent, String image) {
 		super();
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -42,11 +46,31 @@ public class Stain {
 		this.isGreasy = isGreasy;
 		this.roughness = roughness;
 		this.dangerousBacteries = dangerousBacteries;
-		this.height = height;
+		this.isTall = isTall;
 		this.isFruity = isFruity;
 		this.density = density;
 		this.type = type;
+		this.base = base;
+		this.age = age;
+		this.tool = tool;
+		this.detergent = detergent;
 		this.image = image;
+	}
+
+	public String getBase() {
+		return base;
+	}
+
+	public void setBase(String base) {
+		this.base = base;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	// method draw params for pain
@@ -61,11 +85,31 @@ public class Stain {
 		this.isGreasy = generator.nextBoolean();
 		this.roughness = generator.nextInt(100);
 		this.dangerousBacteries = generator.nextInt(100);
-		this.height = generator.nextInt(100);
+		this.isTall = generator.nextBoolean();
 		this.isFruity = generator.nextBoolean();
 		this.density = generator.nextInt(100);
-		this.type = "Stain";
+		this.base = "floor";
+		this.age = generator.nextInt(100);
+		this.type = "???";
+		this.tool = "???";
+		this.detergent = "???";
 		this.image = "data/stain.png";
+	}
+
+	public String getTool() {
+		return tool;
+	}
+
+	public void setTool(String tool) {
+		this.tool = tool;
+	}
+
+	public String getDetergent() {
+		return detergent;
+	}
+
+	public void setDetergent(String detergent) {
+		this.detergent = detergent;
 	}
 
 	@Override
@@ -75,8 +119,8 @@ public class Stain {
 				+ ", smellIntensity=" + smellIntensity + ", isSticky="
 				+ isSticky + ", size=" + size + ", isDried=" + isDried
 				+ ", isGreasy=" + isGreasy + ", roughness=" + roughness
-				+ ", dangerousBacteries=" + dangerousBacteries + ", height="
-				+ height + ", isFruity=" + isFruity + ", density=" + density
+				+ ", dangerousBacteries=" + dangerousBacteries + ", isTall="
+				+ isTall + ", isFruity=" + isFruity + ", density=" + density
 				+ "]";
 	}
 
@@ -161,12 +205,12 @@ public class Stain {
 		this.dangerousBacteries = dangerousBacteries;
 	}
 
-	public int getHeight() {
-		return height;
+	public boolean isTall() {
+		return isTall;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
+	public void setTall(boolean isTall) {
+		this.isTall = isTall;
 	}
 
 	public boolean isFruity() {

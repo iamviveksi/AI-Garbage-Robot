@@ -56,7 +56,7 @@ public class Weka {
 		predicted = null;
 	}
 	
-	public String predictItem(Stain stain) throws Exception
+	public String predictItem(Stain stain, String path) throws Exception
 	{
 		String itemClass = "";
 		String fileContent = 
@@ -79,18 +79,18 @@ public class Weka {
 				+ "," + stain.getRoughness() + "," + stain.getDangerousBacteries() + "," + stain.isFruity() + "," + stain.getDensity() + ",?";
 		
 		BufferedWriter writer = null;	
-		writer = new BufferedWriter(new FileWriter("poligon/data-one.arff"));
+		writer = new BufferedWriter(new FileWriter(path));
 		writer.write(line);
 		writer.close();
 		
-		BufferedReader reader = new BufferedReader(new FileReader("poligon/data-one.arff"));
+		BufferedReader reader = new BufferedReader(new FileReader(path));
 		Instances item = new Instances(reader);
 		item.setClassIndex(item.numAttributes() - 1);		
 		double clsLabel = tree.classifyInstance(item.instance(0));
 		item.instance(0).setClassValue(clsLabel);
 		reader.close();
 		
-		File file = new File("poligon/data-one.arff");
+		File file = new File(path);
 		file.delete();
 		
 		String itemLine = item.instance(0).toString();
@@ -137,8 +137,7 @@ public class Weka {
 	{
 		BufferedWriter writer = null;		
 		writer = new BufferedWriter(new FileWriter(treeGraph));
-		writer.write(tree.toString()  + "\n\n" + tree.graph());
-		//writer.write(tree.graph());		
+		writer.write(tree.toString()  + "\n\n" + tree.graph());		
 		writer.close();
 	}
 	
