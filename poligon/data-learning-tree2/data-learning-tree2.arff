@@ -1,8 +1,8 @@
 @relation cleaner
 
-@attribute class {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}
+@attribute rubbish {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}
 @attribute age numeric
-@attribute class {floor, wood, carpet, carpetCotton}
+@attribute base {floor, wood, carpet, carpetCotton}
 @attribute class {airFreshener,alcohol,bakingSoda,cleaningMilk,dishSoap,floorSoap,fumigator,nothing,paste,soap,solvent,spray,vanish,vinegar,washingPowder,water}
 
 @data
