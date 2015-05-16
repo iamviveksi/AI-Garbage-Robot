@@ -1,0 +1,204 @@
+J48 pruned tree
+------------------
+
+isTall = true
+|   detergent = airFreshener: brush (0.0)
+|   detergent = alcohol: brush (177.0)
+|   detergent = bakingSoda: brush (172.0)
+|   detergent = cleaningMilk
+|   |   size <= 67
+|   |   |   size <= 42: scraper (44.0)
+|   |   |   size > 42
+|   |   |   |   size <= 54: brush (28.0/8.0)
+|   |   |   |   size > 54: scraper (28.0/10.0)
+|   |   size > 67: pressureWasher (234.0/97.0)
+|   detergent = dishSoap: pressureWasher (129.0)
+|   detergent = floorSoap
+|   |   size <= 42: scraper (46.0)
+|   |   size > 42: brush (167.0/59.0)
+|   detergent = fumigator: brush (0.0)
+|   detergent = nothing: grasper (584.0/87.0)
+|   detergent = paste: brush (147.0)
+|   detergent = soap
+|   |   size <= 67
+|   |   |   size <= 42: scraper (41.0)
+|   |   |   size > 42: brush (73.0/32.0)
+|   |   size > 67: pressureWasher (214.0/78.0)
+|   detergent = solvent: brush (102.0)
+|   detergent = spray: brush (111.0)
+|   detergent = vanish: pressureWasher (98.0)
+|   detergent = vinegar: scraper (97.0)
+|   detergent = washingPowder: pressureWasher (247.0)
+|   detergent = water: pressureWasher (246.0)
+isTall = false
+|   detergent = airFreshener: vacuumCleaner (256.0)
+|   detergent = alcohol: sponge (0.0)
+|   detergent = bakingSoda: sponge (0.0)
+|   detergent = cleaningMilk: sponge (350.0/170.0)
+|   detergent = dishSoap: sponge (149.0)
+|   detergent = floorSoap: sponge (174.0)
+|   detergent = fumigator: rubber (150.0)
+|   detergent = nothing
+|   |   size <= 22
+|   |   |   size <= 6: tweezer (57.0/23.0)
+|   |   |   size > 6: besom (162.0/65.0)
+|   |   size > 22: tweezer (1016.0/617.0)
+|   detergent = paste
+|   |   size <= 64: rubber (165.0)
+|   |   size > 64: sponge (146.0/2.0)
+|   detergent = soap
+|   |   size <= 65: sponge (168.0)
+|   |   size > 65: rubber (170.0)
+|   detergent = solvent: sandpaper (170.0)
+|   detergent = spray
+|   |   size <= 31: sandpaper (61.0)
+|   |   size > 31
+|   |   |   size <= 64: sponge (198.0/48.0)
+|   |   |   size > 64: sandpaper (52.0)
+|   detergent = vanish
+|   |   size <= 64
+|   |   |   size <= 22: vacuumCleaner (550.0/72.0)
+|   |   |   size > 22: rubber (108.0)
+|   |   size > 64: sponge (172.0/1.0)
+|   detergent = vinegar: sandpaper (165.0)
+|   detergent = washingPowder: sponge (171.0)
+|   detergent = water
+|   |   size <= 48: sponge (170.0)
+|   |   size > 48: rubber (156.0)
+
+Number of Leaves  : 	47
+
+Size of the tree : 	65
+
+
+digraph J48Tree {
+N0 [label="isTall" ]
+N0->N1 [label="'= true'"]
+N1 [label="detergent" ]
+N1->N2 [label="'= airFreshener'"]
+N2 [label="'brush (0.0)'" shape=box style=filled ]
+N1->N3 [label="'= alcohol'"]
+N3 [label="'brush (177.0)'" shape=box style=filled ]
+N1->N4 [label="'= bakingSoda'"]
+N4 [label="'brush (172.0)'" shape=box style=filled ]
+N1->N5 [label="'= cleaningMilk'"]
+N5 [label="size" ]
+N5->N6 [label="'<= 67'"]
+N6 [label="size" ]
+N6->N7 [label="'<= 42'"]
+N7 [label="'scraper (44.0)'" shape=box style=filled ]
+N6->N8 [label="'> 42'"]
+N8 [label="size" ]
+N8->N9 [label="'<= 54'"]
+N9 [label="'brush (28.0/8.0)'" shape=box style=filled ]
+N8->N10 [label="'> 54'"]
+N10 [label="'scraper (28.0/10.0)'" shape=box style=filled ]
+N5->N11 [label="'> 67'"]
+N11 [label="'pressureWasher (234.0/97.0)'" shape=box style=filled ]
+N1->N12 [label="'= dishSoap'"]
+N12 [label="'pressureWasher (129.0)'" shape=box style=filled ]
+N1->N13 [label="'= floorSoap'"]
+N13 [label="size" ]
+N13->N14 [label="'<= 42'"]
+N14 [label="'scraper (46.0)'" shape=box style=filled ]
+N13->N15 [label="'> 42'"]
+N15 [label="'brush (167.0/59.0)'" shape=box style=filled ]
+N1->N16 [label="'= fumigator'"]
+N16 [label="'brush (0.0)'" shape=box style=filled ]
+N1->N17 [label="'= nothing'"]
+N17 [label="'grasper (584.0/87.0)'" shape=box style=filled ]
+N1->N18 [label="'= paste'"]
+N18 [label="'brush (147.0)'" shape=box style=filled ]
+N1->N19 [label="'= soap'"]
+N19 [label="size" ]
+N19->N20 [label="'<= 67'"]
+N20 [label="size" ]
+N20->N21 [label="'<= 42'"]
+N21 [label="'scraper (41.0)'" shape=box style=filled ]
+N20->N22 [label="'> 42'"]
+N22 [label="'brush (73.0/32.0)'" shape=box style=filled ]
+N19->N23 [label="'> 67'"]
+N23 [label="'pressureWasher (214.0/78.0)'" shape=box style=filled ]
+N1->N24 [label="'= solvent'"]
+N24 [label="'brush (102.0)'" shape=box style=filled ]
+N1->N25 [label="'= spray'"]
+N25 [label="'brush (111.0)'" shape=box style=filled ]
+N1->N26 [label="'= vanish'"]
+N26 [label="'pressureWasher (98.0)'" shape=box style=filled ]
+N1->N27 [label="'= vinegar'"]
+N27 [label="'scraper (97.0)'" shape=box style=filled ]
+N1->N28 [label="'= washingPowder'"]
+N28 [label="'pressureWasher (247.0)'" shape=box style=filled ]
+N1->N29 [label="'= water'"]
+N29 [label="'pressureWasher (246.0)'" shape=box style=filled ]
+N0->N30 [label="'= false'"]
+N30 [label="detergent" ]
+N30->N31 [label="'= airFreshener'"]
+N31 [label="'vacuumCleaner (256.0)'" shape=box style=filled ]
+N30->N32 [label="'= alcohol'"]
+N32 [label="'sponge (0.0)'" shape=box style=filled ]
+N30->N33 [label="'= bakingSoda'"]
+N33 [label="'sponge (0.0)'" shape=box style=filled ]
+N30->N34 [label="'= cleaningMilk'"]
+N34 [label="'sponge (350.0/170.0)'" shape=box style=filled ]
+N30->N35 [label="'= dishSoap'"]
+N35 [label="'sponge (149.0)'" shape=box style=filled ]
+N30->N36 [label="'= floorSoap'"]
+N36 [label="'sponge (174.0)'" shape=box style=filled ]
+N30->N37 [label="'= fumigator'"]
+N37 [label="'rubber (150.0)'" shape=box style=filled ]
+N30->N38 [label="'= nothing'"]
+N38 [label="size" ]
+N38->N39 [label="'<= 22'"]
+N39 [label="size" ]
+N39->N40 [label="'<= 6'"]
+N40 [label="'tweezer (57.0/23.0)'" shape=box style=filled ]
+N39->N41 [label="'> 6'"]
+N41 [label="'besom (162.0/65.0)'" shape=box style=filled ]
+N38->N42 [label="'> 22'"]
+N42 [label="'tweezer (1016.0/617.0)'" shape=box style=filled ]
+N30->N43 [label="'= paste'"]
+N43 [label="size" ]
+N43->N44 [label="'<= 64'"]
+N44 [label="'rubber (165.0)'" shape=box style=filled ]
+N43->N45 [label="'> 64'"]
+N45 [label="'sponge (146.0/2.0)'" shape=box style=filled ]
+N30->N46 [label="'= soap'"]
+N46 [label="size" ]
+N46->N47 [label="'<= 65'"]
+N47 [label="'sponge (168.0)'" shape=box style=filled ]
+N46->N48 [label="'> 65'"]
+N48 [label="'rubber (170.0)'" shape=box style=filled ]
+N30->N49 [label="'= solvent'"]
+N49 [label="'sandpaper (170.0)'" shape=box style=filled ]
+N30->N50 [label="'= spray'"]
+N50 [label="size" ]
+N50->N51 [label="'<= 31'"]
+N51 [label="'sandpaper (61.0)'" shape=box style=filled ]
+N50->N52 [label="'> 31'"]
+N52 [label="size" ]
+N52->N53 [label="'<= 64'"]
+N53 [label="'sponge (198.0/48.0)'" shape=box style=filled ]
+N52->N54 [label="'> 64'"]
+N54 [label="'sandpaper (52.0)'" shape=box style=filled ]
+N30->N55 [label="'= vanish'"]
+N55 [label="size" ]
+N55->N56 [label="'<= 64'"]
+N56 [label="size" ]
+N56->N57 [label="'<= 22'"]
+N57 [label="'vacuumCleaner (550.0/72.0)'" shape=box style=filled ]
+N56->N58 [label="'> 22'"]
+N58 [label="'rubber (108.0)'" shape=box style=filled ]
+N55->N59 [label="'> 64'"]
+N59 [label="'sponge (172.0/1.0)'" shape=box style=filled ]
+N30->N60 [label="'= vinegar'"]
+N60 [label="'sandpaper (165.0)'" shape=box style=filled ]
+N30->N61 [label="'= washingPowder'"]
+N61 [label="'sponge (171.0)'" shape=box style=filled ]
+N30->N62 [label="'= water'"]
+N62 [label="size" ]
+N62->N63 [label="'<= 48'"]
+N63 [label="'sponge (170.0)'" shape=box style=filled ]
+N62->N64 [label="'> 48'"]
+N64 [label="'rubber (156.0)'" shape=box style=filled ]
+}

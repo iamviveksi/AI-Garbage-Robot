@@ -118,6 +118,56 @@ public class Weka {
 		return itemClass;
 	}
 	
+	public String predictDetergent(Stain stain, String path) throws Exception
+	{
+		String itemClass = "";
+		String fileContent = 
+				"@relation cleaner\n"
+				+ "@attribute rubbish {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}\n"
+				+ "@attribute age numeric\n"
+				+ "@attribute base {floor, wood, carpet, carpetCotton}\n"
+				+ "@attribute class {airFreshener,alcohol,bakingSoda,cleaningMilk,dishSoap,floorSoap,fumigator,nothing,paste,soap,solvent,spray,vanish,vinegar,washingPowder,water}\n"
+				+ "\n"
+				+ "@data\n";
+		
+		String line = fileContent + stain.getType() + "," + stain.getAge() + "," + stain.getBase() + ",?";
+		
+		BufferedWriter writer = null;	
+		writer = new BufferedWriter(new FileWriter(path));
+		writer.write(line);
+		writer.close();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(path));
+		Instances item = new Instances(reader);
+		item.setClassIndex(item.numAttributes() - 1);		
+		double clsLabel = tree.classifyInstance(item.instance(0));
+		item.instance(0).setClassValue(clsLabel);
+		reader.close();
+		
+		File file = new File(path);
+		file.delete();
+		
+		String itemLine = item.instance(0).toString();
+		if(itemLine.contains("airFreshener")) itemClass = "airFreshener";
+		else if(itemLine.contains("alcohol")) itemClass = "alcohol";
+		else if(itemLine.contains("bakingSoda")) itemClass = "bakingSoda";
+		else if(itemLine.contains("cleaningMilk")) itemClass = "cleaningMilk";
+		else if(itemLine.contains("dishSoap")) itemClass = "dishSoap";
+		else if(itemLine.contains("floorSoap")) itemClass = "floorSoap";
+		else if(itemLine.contains("fumigator")) itemClass = "fumigator";
+		else if(itemLine.contains("nothing")) itemClass = "nothing";
+		else if(itemLine.contains("paste")) itemClass = "paste";
+		else if(itemLine.contains("soap")) itemClass = "soap";
+		else if(itemLine.contains("solvent")) itemClass = "solvent";
+		else if(itemLine.contains("spray")) itemClass = "spray";
+		else if(itemLine.contains("vanish")) itemClass = "vanish";
+		else if(itemLine.contains("vinegar")) itemClass = "vinegar";
+		else if(itemLine.contains("washingPowder")) itemClass = "washingPowder";
+		else if(itemLine.contains("water")) itemClass = "water";
+		
+		return itemClass;
+	}
+	
 	public void writePredictions(String predictions) throws Exception
 	{	
 		if(predicted != null)

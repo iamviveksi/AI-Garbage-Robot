@@ -31,6 +31,8 @@ public class GarbageRobot extends BasicGame {
 	private static List<Stain> unvisitedStains;
 	private static LinkedList<Move> movesList;
 	private Weka weka = null;
+	private Weka wekaDetergent = null;
+	private Weka wekaEquipment = null;
 	private String tools = "";
 	private String detergents = "";
 	
@@ -171,9 +173,13 @@ public class GarbageRobot extends BasicGame {
 					robot.getYMap());
 			try {
 				if (!robot.isMoving()) {
-					String classItem = weka.predictItem(actStain, "poligon/stain/data-one.arff");
-					actStain.setType(classItem);
-					actStain.setImage("data/" + classItem + ".png");
+					String type = weka.predictItem(actStain, "poligon/stain/data-one.arff");
+					actStain.setType(type);
+					actStain.setImage("data/" + type + ".png");
+					
+					String detergent = wekaDetergent.predictDetergent(actStain, "poligon/detergent/data-one.arff");
+					actStain.setDetergent(detergent);
+					detergents = detergents + detergent + "\n";
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -183,18 +189,13 @@ public class GarbageRobot extends BasicGame {
 			//g.setFont(font);
 			g.setColor(Color.white);
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 70f);
-			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
-					1050f, 90f);
-			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(),
-					1050f, 110f);
+			g.drawString("ColorIntensity: " + actStain.getColorIntensity(), 1050f, 90f);
+			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(), 1050f, 110f);
 			g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 130f);
-			
 			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 150f);
 			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 170f);
 			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 190f);
-			g.drawString(
-					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
-					1050f, 210f);			
+			g.drawString("Dangerous Bacteries: " + actStain.getDangerousBacteries(), 1050f, 210f);			
 			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 230f);
 			g.drawString("Density: " + actStain.getDensity(), 1050f, 250f);
 			g.setColor(Color.red);
@@ -209,7 +210,7 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Age: " + actStain.getAge(), 1050f, 410f);
 			g.drawString("Type: " + actStain.getType(), 1050f, 430f);
 			g.setColor(Color.red);
-			g.drawString("DETERGENT: ", 1050f, 450f);
+			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 450f);
 			g.setColor(Color.green);
 			g.drawString("BACKPACK: ", 1050f, 510f);
 			g.setColor(Color.white);
@@ -228,10 +229,17 @@ public class GarbageRobot extends BasicGame {
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		try {
-			weka = new Weka("poligon/stain/data-learning.arff",
-					"poligon/stain/data-test.arff");
+			
+			weka = new Weka("poligon/stain/data-learning.arff", "poligon/stain/data-test.arff");
 			weka.writePredictions("poligon/stain/data-predicted.arff");
 			weka.writeTree("poligon/stain/tree.txt");
+			
+			wekaDetergent = new Weka("poligon/detergent/data-learning.arff");
+			wekaDetergent.writeTree("poligon/detergent/tree.txt");
+			
+			wekaEquipment = new Weka("poligon/equipment/data-learning.arff");
+			wekaEquipment.writeTree("poligon/equipment/tree.txt");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
