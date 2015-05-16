@@ -363,6 +363,8 @@ public class GarbageRobot extends BasicGame {
 			// todo: CLEANING
 			readMapFromFile();
 			generateStains();
+			tools = "";
+			detergents = "";
 
 		} else if (input.isKeyDown(Input.KEY_UP)) {
 			robot.setSpriteUp();// set sprite
