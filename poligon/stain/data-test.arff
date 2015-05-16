@@ -3,23 +3,23 @@
 @attribute wetness numeric
 @attribute colorIntensity numeric
 @attribute smellIntensity numeric
-@attribute isSticky {TRUE, FALSE}
-@attribute isGreasy {TRUE, FALSE}
+@attribute isSticky {true, false}
+@attribute isGreasy {true, false}
 @attribute roughness numeric
 @attribute dangerousBacteries numeric
-@attribute isFruity {TRUE, FALSE}
+@attribute isFruity {true, false}
 @attribute density numeric
-@attribute class {wine, water, coffee, ink, cake, sauce, dressing, oil, blood, lubricant, mud, grass, glue, sand, dust, paste, glass, paper, rot, fungus}
+@attribute class {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}
 
 
 @data
-92,96,24,FALSE,FALSE,12,3,TRUE,0,?
-90,86,40,FALSE,FALSE,0,3,FALSE,4,?
-69,87,54,TRUE,TRUE,11,46,FALSE,50,?
-52,52,21,TRUE,TRUE,10,2,FALSE,50,?
-12,0,83,TRUE,TRUE,13,10,FALSE,80,?
-0,12,6,FALSE,FALSE,68,24,FALSE,1,?
-43,53,65,TRUE,FALSE,17,88,FALSE,65,?
-1,12,0,FALSE,FALSE,83,1,FALSE,97,?
-21,65,87,TRUE,FALSE,23,77,TRUE,64,?
-0,21,2,TRUE,TRUE,32,33,TRUE,52,?
+92,96,24,false,false,12,3,true,0,?
+90,86,40,false,false,0,3,false,4,?
+69,87,54,true,true,11,46,false,50,?
+52,52,21,true,true,10,2,false,50,?
+12,0,83,true,true,13,10,false,80,?
+0,12,6,false,false,68,24,false,1,?
+43,53,65,true,false,17,88,false,65,?
+1,12,0,false,false,83,1,false,97,?
+21,65,87,true,false,23,77,true,64,?
+0,21,2,true,true,32,33,true,52,?

@@ -60,7 +60,7 @@ public class Weka {
 	{
 		String itemClass = "";
 		String fileContent = 
-				"@relation rubbish-predict\n"
+				"@relation rubbish\n"
 				+ "@attribute wetness numeric\n"
 				+ "@attribute colorIntensity numeric\n"
 				+ "@attribute smellIntensity numeric\n"
@@ -70,7 +70,7 @@ public class Weka {
 				+ "@attribute dangerousBacteries numeric\n"
 				+ "@attribute isFruity {true,false}\n"
 				+ "@attribute density numeric\n"
-				+ "@attribute class {wine,water,coffee,ink,cake,sauce,dressing,oil,blood,lubricant,mud,grass,glue,sand,dust,paste,glass,paper,rot,fungus}\n"
+				+ "@attribute class {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}\n"
 				+ "\n"
 				+ "@data\n";
 		
