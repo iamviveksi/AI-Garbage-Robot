@@ -252,7 +252,6 @@ public class GarbageRobot extends BasicGame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.err.println("INIT");
 		robot.init(4, 4);
 
 		floor = new Image("data/floor.png");

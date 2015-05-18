@@ -1,5 +1,5 @@
 map_x=32
 map_y=20
 map_path=data/map.txt
-stepVal=1.5
+stepVal=2
 stainsOnRoom=5
