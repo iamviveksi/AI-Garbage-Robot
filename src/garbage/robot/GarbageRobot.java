@@ -165,9 +165,9 @@ public class GarbageRobot extends BasicGame {
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 30f);
 		g.drawString("----------------------------", 1050f, 50f);
 		g.setColor(Color.green);
-		g.drawString("BACKPACK: ", 1050f, 510f);
+		g.drawString("BACKPACK: ", 1050f, 570f);
 		g.setColor(Color.white);
-		g.drawString(backpack, 1050f, 530f);
+		g.drawString(backpack, 1050f, 590f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 
 			Stain actStain = getStainByPosition(robot.getXMap(),
@@ -210,20 +210,23 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("Age: " + actStain.getAge(), 1050f, 310f);
 			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
 			g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
+			g.drawString("Base state: " + actStain.getBaseState(), 1050f, 370f);
+			g.drawString("Chemicals: " + actStain.getChemicals(), 1050f, 390f);
+			g.drawString("Is Poisonous?: " + actStain.isPoisonous(), 1050f, 410f);
 			g.setColor(Color.red);
-			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 370f);
+			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 430f);
 			
 			g.setColor(Color.white);
-			g.drawString("Is Tall?: " + actStain.isTall(), 1050f, 410f);
-			g.drawString("Size: " + actStain.getSize(), 1050f, 430f);
-			g.drawString("Detergent: " + actStain.getDetergent(), 1050f, 450f);
+			g.drawString("Is Tall?: " + actStain.isTall(), 1050f, 470f);
+			g.drawString("Size: " + actStain.getSize(), 1050f, 490f);
+			g.drawString("Detergent: " + actStain.getDetergent(), 1050f, 510f);
 			g.setColor(Color.red);
-			g.drawString("EQUIPMENT: " + actStain.getTool(), 1050f, 470f);
+			g.drawString("EQUIPMENT: " + actStain.getTool(), 1050f, 530f);
 
 			g.setColor(Color.green);
-			g.drawString("BACKPACK: ", 1050f, 510f);
+			g.drawString("BACKPACK: ", 1050f, 570f);
 			g.setColor(Color.white);
-			g.drawString(backpack, 1050f, 530f);
+			g.drawString(backpack, 1050f, 590f);
 			
 		}
 		else {

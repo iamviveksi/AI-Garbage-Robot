@@ -20,6 +20,9 @@ public class Stain {
 	private String type;
 	private String base;
 	private int age;
+	private int baseState;
+	private int chemicals;
+	private boolean isPoisonous;
 	private String tool;
 	private String detergent;
 	private String image;
@@ -33,7 +36,7 @@ public class Stain {
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
 			int smellIntensity, boolean isSticky, int size, boolean isDried,
 			boolean isGreasy, int roughness, int dangerousBacteries,
-			boolean isTall, boolean isFruity, int density, String type, String base, int age, String tool, String detergent, String image) {
+			boolean isTall, boolean isFruity, int density, String type, String base, int age, int chemicals, int baseState, boolean isPoisonous, String tool, String detergent, String image) {
 		super();
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -52,26 +55,14 @@ public class Stain {
 		this.type = type;
 		this.base = base;
 		this.age = age;
+		this.chemicals = chemicals;
+		this.baseState = baseState;
+		this.isPoisonous = isPoisonous;
 		this.tool = tool;
 		this.detergent = detergent;
 		this.image = image;
 	}
 
-	public String getBase() {
-		return base;
-	}
-
-	public void setBase(String base) {
-		this.base = base;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
 
 	// method draw params for pain
 	private void drawParams() {
@@ -93,7 +84,26 @@ public class Stain {
 		this.type = "???";
 		this.tool = "???";
 		this.detergent = "???";
+		this.baseState = generator.nextInt(100);
+		this.chemicals = generator.nextInt(100);
+		this.isPoisonous = generator.nextBoolean();
 		this.image = "data/stain.png";
+	}
+	
+	public String getBase() {
+		return base;
+	}
+
+	public void setBase(String base) {
+		this.base = base;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	public String getTool() {
@@ -235,6 +245,30 @@ public class Stain {
 
 	public void setYPos(int yPos) {
 		this.yPos = yPos;
+	}
+	
+	public int getBaseState() {
+		return baseState;
+	}
+
+	public void setBaseState(int baseState) {
+		this.baseState = baseState;
+	}
+
+	public int getChemicals() {
+		return chemicals;
+	}
+
+	public void setChemicals(int chemicals) {
+		this.chemicals = chemicals;
+	}
+
+	public boolean isPoisonous() {
+		return isPoisonous;
+	}
+
+	public void setPoisonous(boolean isPoisonous) {
+		this.isPoisonous = isPoisonous;
 	}
 
 	public String getType() {
