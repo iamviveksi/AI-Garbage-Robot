@@ -68,7 +68,7 @@ coffee 6,30 3,4 60,100 10,40 TRUE vanish
 glue 51,100 3,4 40,90 0,30 TRUE vanish
 ink 71,100 3,4 50,95 20,50 TRUE vanish
 mud 81,100 3,4 40,100 0,40 TRUE vanish
-fungus 0,25 1,3 (bez 2) 30,70 0,50 TRUE vinegar
+fungus 0,25 1,3(bez2) 30,70 0,50 TRUE vinegar
 glue 0,20 1,2 20,45 10,70 TRUE vinegar
 sauce 81,100 1,1 40,75 0,20 TRUE vinegar
 coffee 31,60 2,4 0,60 30,70 FALSE washingPowder
