@@ -8,6 +8,7 @@
 @attribute isPoisonous {true, false}
 @attribute class {airFreshener,alcohol,bakingSoda,cleaningMilk,dishSoap,floorSoap,fumigator,nothing,paste,soap,solvent,spray,vanish,vinegar,washingPowder,water}
 
+@data
 cake,0,wood,20,75,false,airFreshener
 cake,2,wood,14,39,false,airFreshener
 cake,0,wood,12,36,false,airFreshener

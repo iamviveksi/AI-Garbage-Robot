@@ -126,11 +126,14 @@ public class Weka {
 				+ "@attribute rubbish {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}\n"
 				+ "@attribute age numeric\n"
 				+ "@attribute base {floor, wood, carpet, carpetCotton}\n"
+				+ "@attribute chemicals numeric\n"
+				+ "@attribute baseState numeric\n"
+				+ "@attribute isPoisonous {true, false}\n"
 				+ "@attribute class {airFreshener,alcohol,bakingSoda,cleaningMilk,dishSoap,floorSoap,fumigator,nothing,paste,soap,solvent,spray,vanish,vinegar,washingPowder,water}\n"
 				+ "\n"
 				+ "@data\n";
 		
-		String line = fileContent + stain.getType() + "," + stain.getAge() + "," + stain.getBase() + ",?";
+		String line = fileContent + stain.getType() + "," + stain.getAge() + "," + stain.getBase() + "," + stain.getChemicals() + "," + stain.getBaseState() + "," + stain.isPoisonous() + ",?";
 		
 		BufferedWriter writer = null;	
 		writer = new BufferedWriter(new FileWriter(path));
