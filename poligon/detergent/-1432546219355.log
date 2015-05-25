@@ -1,13 +1,4 @@
-@relation cleaner
-
-@attribute rubbish {blood, cake, coffee, dressing, dust, fungus, glass, glue, grass, ink, lubricant, mud, oil, paper, paste, rot, sand, sauce, water, wine}
-@attribute age numeric
-@attribute base {floor, wood, carpet, carpetCotton}
-@attribute chemicals numeric
-@attribute baseState numeric
-@attribute isPoisonous {true, false}
-@attribute class {airFreshener,alcohol,bakingSoda,cleaningMilk,dishSoap,floorSoap,fumigator,nothing,paste,soap,solvent,spray,vanish,vinegar,washingPowder,water}
-
+get()
 cake,0,wood,20,75,false,airFreshener
 cake,2,wood,14,39,false,airFreshener
 cake,0,wood,12,36,false,airFreshener
@@ -12408,3 +12399,4 @@ wine,4,carpet,24,61,false,water
 wine,15,floor,19,81,false,water
 wine,7,carpetCotton,15,90,false,water
 wine,7,carpetCotton,15,78,false,water
+undefined
