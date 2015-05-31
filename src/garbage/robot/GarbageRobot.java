@@ -1,5 +1,8 @@
 package garbage.robot;
 
+import garbage.robot.AStar.Cleaning.Cleaner;
+import garbage.robot.AStar.Cleaning.StainGrid;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +49,18 @@ public class GarbageRobot extends BasicGame {
 	// start the GAME!
 
 	public static void main(String[] arguments) throws SlickException {
+		
+		
+//		StainGrid staingrid1 = new StainGrid();
+//		System.out.println();
+//		Cleaner.clean(staingrid1);
+//		
+//		StainGrid staingrid2 = new StainGrid();
+//		System.out.println();
+//		
+//		StainGrid staingrid3 = new StainGrid();
+//		System.out.println();
+		
 		robot = new Sprite();
 
 		readMapFromFile();
