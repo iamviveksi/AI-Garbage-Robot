@@ -51,15 +51,15 @@ public class GarbageRobot extends BasicGame {
 	public static void main(String[] arguments) throws SlickException {
 		
 		
-//		StainGrid staingrid1 = new StainGrid();
-//		System.out.println();
-//		Cleaner.clean(staingrid1);
-//		
-//		StainGrid staingrid2 = new StainGrid();
-//		System.out.println();
-//		
-//		StainGrid staingrid3 = new StainGrid();
-//		System.out.println();
+		StainGrid staingrid1 = new StainGrid();
+		System.out.println();
+		Cleaner.clean(staingrid1);
+		
+	/*	StainGrid staingrid2 = new StainGrid();
+		System.out.println();
+		
+		StainGrid staingrid3 = new StainGrid();
+		System.out.println();*/
 		
 		robot = new Sprite();
 
