@@ -39,7 +39,6 @@ public class GarbageRobot extends BasicGame {
 	private String tools = "";
 	private String detergents = "";
 	private String backpack = "";
-	
 
 	public GarbageRobot() {
 		// text in the main window
@@ -49,18 +48,45 @@ public class GarbageRobot extends BasicGame {
 	// start the GAME!
 
 	public static void main(String[] arguments) throws SlickException {
+
+		Random gen = new Random();
+		LinkedList<State> test = new LinkedList<State>();
+		for (int i = 1; i <= 1; i++) {
+			State stan1 = new State(gen.nextInt(20), gen.nextInt(20));
+			test.add(stan1);
+		}
+		System.out.println("Before: ");
+		for (State state : test)
+		{
+			System.out.print(state.getF() + " ");
+		}
+		Cleaner.quickSort(test, 0, test.size() - 1);
+		System.out.println("\nAfter: ");
+		for (State state : test)
+		{
+			System.out.print(state.getF() + " ");
+		}
+			
+		System.out.println("\nremove: ");
 		
-		
-		StainGrid staingrid1 = new StainGrid();
+		Cleaner.removeDuplicates(test);
+		for (State state : test)
+		{
+			System.out.print(state.getF() + " ");
+		}
+			
 		System.out.println();
-		Cleaner.clean(staingrid1);
-		
-	/*	StainGrid staingrid2 = new StainGrid();
-		System.out.println();
-		
-		StainGrid staingrid3 = new StainGrid();
-		System.out.println();*/
-		
+
+		// StainGrid staingrid1 = new StainGrid();
+		// System.out.println();
+		// Cleaner.clean(staingrid1);
+
+		/*
+		 * StainGrid staingrid2 = new StainGrid(); System.out.println();
+		 * 
+		 * StainGrid staingrid3 = new StainGrid(); System.out.println();
+		 */
+
 		robot = new Sprite();
 
 		readMapFromFile();
@@ -129,15 +155,15 @@ public class GarbageRobot extends BasicGame {
 		for (int i = 0; i < 1024; i += 32)
 			for (int j = 0; j < 640; j += 32)
 				g.drawImage(wood, i, j);
-		
+
 		for (int i = 32; i <= 320; i += 32)
 			for (int j = 32; j <= 256; j += 32)
 				g.drawImage(carpetCotton, i, j);
-		
+
 		for (int i = 0; i <= 320; i += 32)
 			for (int j = 352; j <= 576; j += 32)
 				g.drawImage(carpet, i, j);
-		
+
 		for (int i = 512; i <= 960; i += 32)
 			for (int j = 384; j <= 576; j += 32)
 				g.drawImage(floor, i, j);
@@ -163,10 +189,14 @@ public class GarbageRobot extends BasicGame {
 					int a = i * 32;
 					int b = j * 32;
 					Stain stain = getStainByPosition(i, j);
-					if(a >= 512 && a <=960 && b >= 384 && b <= 576) stain.setBase("floor");
-					else if(a >= 0 && a <= 320 && b >= 352 && b <=576) stain.setBase("carpet");
-					else if(a >= 32 && a <= 320 && b >= 32 && b <= 256) stain.setBase("carpetCotton");
-					else stain.setBase("wood");
+					if (a >= 512 && a <= 960 && b >= 384 && b <= 576)
+						stain.setBase("floor");
+					else if (a >= 0 && a <= 320 && b >= 352 && b <= 576)
+						stain.setBase("carpet");
+					else if (a >= 32 && a <= 320 && b >= 32 && b <= 256)
+						stain.setBase("carpetCotton");
+					else
+						stain.setBase("wood");
 					Image image = new Image(stain.getImage());
 					g.drawImage(image, i * 32, j * 32);
 				}
@@ -189,17 +219,22 @@ public class GarbageRobot extends BasicGame {
 					robot.getYMap());
 			try {
 				if (!robot.isMoving()) {
-					String type = weka.predictItem(actStain, "poligon/stain/data-one.arff");
+					String type = weka.predictItem(actStain,
+							"poligon/stain/data-one.arff");
 					actStain.setType(type);
 					actStain.setImage("data/" + type + ".png");
-					
-					String detergent = wekaDetergent.predictDetergent(actStain, "poligon/detergent/data-one.arff");
+
+					String detergent = wekaDetergent.predictDetergent(actStain,
+							"poligon/detergent/data-one.arff");
 					actStain.setDetergent(detergent);
-					if(!detergents.contains(detergent)) detergents = detergents + detergent + "\n";
-					
-					String equipment = wekaEquipment.predictEquipment(actStain, "poligon/equipment/data-one.arff");
+					if (!detergents.contains(detergent))
+						detergents = detergents + detergent + "\n";
+
+					String equipment = wekaEquipment.predictEquipment(actStain,
+							"poligon/equipment/data-one.arff");
 					actStain.setTool(equipment);
-					if(!tools.contains(equipment)) tools = tools + equipment + "\n";
+					if (!tools.contains(equipment))
+						tools = tools + equipment + "\n";
 
 				}
 			} catch (Exception e) {
@@ -209,28 +244,33 @@ public class GarbageRobot extends BasicGame {
 
 			g.setColor(Color.white);
 			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 70f);
-			g.drawString("ColorIntensity: " + actStain.getColorIntensity(), 1050f, 90f);
-			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(), 1050f, 110f);
+			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
+					1050f, 90f);
+			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(),
+					1050f, 110f);
 			g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 130f);
 			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 150f);
 			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 170f);
 			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 190f);
-			g.drawString("Dangerous Bacteries: " + actStain.getDangerousBacteries(), 1050f, 210f);			
+			g.drawString(
+					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
+					1050f, 210f);
 			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 230f);
 			g.drawString("Density: " + actStain.getDensity(), 1050f, 250f);
 			g.setColor(Color.red);
 			g.drawString("TYPE: " + actStain.getType(), 1050f, 270f);
-			
+
 			g.setColor(Color.white);
 			g.drawString("Age: " + actStain.getAge(), 1050f, 310f);
 			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
 			g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
 			g.drawString("Base state: " + actStain.getBaseState(), 1050f, 370f);
 			g.drawString("Chemicals: " + actStain.getChemicals(), 1050f, 390f);
-			g.drawString("Is Poisonous?: " + actStain.isPoisonous(), 1050f, 410f);
+			g.drawString("Is Poisonous?: " + actStain.isPoisonous(), 1050f,
+					410f);
 			g.setColor(Color.red);
 			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 430f);
-			
+
 			g.setColor(Color.white);
 			g.drawString("Is Tall?: " + actStain.isTall(), 1050f, 470f);
 			g.drawString("Size: " + actStain.getSize(), 1050f, 490f);
@@ -242,30 +282,30 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("BACKPACK: ", 1050f, 570f);
 			g.setColor(Color.white);
 			g.drawString(backpack, 1050f, 590f);
-			
-		}
-		else {
+
+		} else {
 			g.drawString("Needed detergents: ", 1050f, 70f);
 			g.drawString(detergents, 1050f, 90f);
 			g.drawString("Needed tools: ", 1050f, 210f);
-			g.drawString(tools, 1050f, 230f);			
+			g.drawString(tools, 1050f, 230f);
 		}
 	}
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		try {
-			
-			weka = new Weka("poligon/stain/data-learning.arff", "poligon/stain/data-test.arff");
+
+			weka = new Weka("poligon/stain/data-learning.arff",
+					"poligon/stain/data-test.arff");
 			weka.writePredictions("poligon/stain/data-predicted.arff");
 			weka.writeTree("poligon/stain/tree.txt");
-			
+
 			wekaDetergent = new Weka("poligon/detergent/data-learning.arff");
 			wekaDetergent.writeTree("poligon/detergent/tree.txt");
-			
+
 			wekaEquipment = new Weka("poligon/equipment/data-learning.arff");
 			wekaEquipment.writeTree("poligon/equipment/tree.txt");
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

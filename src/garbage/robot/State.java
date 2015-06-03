@@ -1,5 +1,7 @@
 package garbage.robot;
 
+import garbage.robot.AStar.Cleaning.DirtyField;
+
 public class State {
 	private int x;
 	private int y;
@@ -16,8 +18,30 @@ public class State {
 		Parent = parent;
 	}
 
+	public State(int F, int G) {
+		this.F = F;
+		this.G = G;
+	}
+
+	public State(State state) {
+		this.x = state.getX();
+		this.y = state.getY();
+		this.H = state.getH();
+		this.G = state.getG();
+		this.F = state.getF();
+		this.direction = state.getDirection();
+		this.Parent = state.getParent();
+	}
+
 	public boolean equate(int pX, int pY, char pDirection) {
 		if ((this.x == pX) && (this.y == pY) && (this.direction == pDirection))
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean equate(State parState){
+		if (this.x == parState.getX() && this.y == parState.getY() && this.direction == parState.getDirection())
 			return true;
 		else
 			return false;
@@ -50,6 +74,11 @@ public class State {
 	public void setH(Stain stain) {
 		H = Math.abs(stain.getXPos() - this.x)
 				+ Math.abs(stain.getYPos() - this.y) * 10;
+	}
+	
+	public void setH(DirtyField dirtyField) {
+		H = Math.abs(dirtyField.getX() - this.x)
+				+ Math.abs(dirtyField.getY() - this.y) * 10;
 	}
 
 	public int getG() {

@@ -40,6 +40,8 @@ public class StainGrid {
 		while (remainingObstacles > 0) {
 			randX = generator.nextInt(SIZE_X - 1);
 			randY = generator.nextInt(SIZE_Y - 1);
+			if(randX == SIZE_X / 2 && randY == SIZE_Y / 2)
+				continue;
 			if (grid[randY][randX] != '1' && grid[randY][randX] != '2') {
 				grid[randY][randX] = '2';
 				remainingObstacles--;
