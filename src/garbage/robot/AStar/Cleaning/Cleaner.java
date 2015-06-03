@@ -66,6 +66,7 @@ public class Cleaner {
 		boolean isStainFound = false;
 		int dist = 1;
 		if (grid.getField(robotX, robotY) == '1') {
+			tempField = new DirtyField();
 			tempField.setX(robotX);
 			tempField.setY(robotY);
 			tempField.setH(0);
@@ -78,6 +79,7 @@ public class Cleaner {
 				int verge = (robotY - dist) >= 0 ? (robotY - dist) : 0;
 				try {
 					if (grid.getField(i, verge) == '1') {
+						tempField = new DirtyField();
 						tempField.setX(i);
 						tempField.setY(verge);
 						tempField.setH(calculateDistance(robotX, robotY, i,
@@ -96,6 +98,7 @@ public class Cleaner {
 				int verge = (robotX + dist) <grid.getSIZE_X() ? (robotX + dist) : grid.getSIZE_X()-1;
 				try {
 					if (grid.getField(verge, i) == '1') {
+						tempField = new DirtyField();
 						tempField.setX(verge);
 						tempField.setY(i);
 						tempField.setH(calculateDistance(robotX, robotY, verge, i));
@@ -113,6 +116,7 @@ public class Cleaner {
 					int verge = (robotY + dist) <grid.getSIZE_Y() ? (robotY + dist) : grid.getSIZE_Y()-1;
 				try {
 					if (grid.getField(i, verge) == '1') {
+						tempField = new DirtyField();
 						tempField.setX(i);
 						tempField.setY(verge);
 						tempField.setH(calculateDistance(robotX, robotY, i,
@@ -132,6 +136,7 @@ public class Cleaner {
 				try {
 					
 					if (grid.getField(verge, i) == '1') {
+						tempField = new DirtyField();
 						tempField.setX(verge);
 						tempField.setY(i);
 						tempField.setH(calculateDistance(robotX, robotY, verge,
@@ -150,15 +155,16 @@ public class Cleaner {
 		int minH = dirtyFields.get(0).getH();
 		int minIndex = 0;
 		
-		System.out.print("rozmiar wektora: " + dirtyFields.size() + " ");
-		
 		for (int i = 1; i < dirtyFields.size(); i++) {
 			if (dirtyFields.get(i).getH() < minH) {
+				
 				minH = dirtyFields.get(i).getH();
 				minIndex = i;
 			}
 		}
-		return dirtyFields.get(minIndex);
+		
+		DirtyField result = dirtyFields.get(minIndex);
+		dirtyFields.clear();
+		return result;
 	}
-
 }
