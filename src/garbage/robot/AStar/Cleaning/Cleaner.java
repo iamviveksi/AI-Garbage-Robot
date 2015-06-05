@@ -1,11 +1,11 @@
 package garbage.robot.AStar.Cleaning;
 
-import garbage.robot.GarbageRobot;
+import garbage.robot.Move;
 import garbage.robot.State;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 import java.util.Vector;
 
 public class Cleaner {
@@ -17,6 +17,8 @@ public class Cleaner {
 	private static LinkedList<State> closedStates;
 	private static StainGrid grid;
 	private static DirtyField purpose;
+	private static LinkedList<Move> moves;
+	private static Stack<Move> tempStack;
 
 	private final static char N = 'N';
 	private final static char W = 'W';
@@ -27,20 +29,25 @@ public class Cleaner {
 
 	}
 
-	public static void clean(StainGrid parGrid) {
+	public static LinkedList<Move> clean(StainGrid parGrid) {
 		grid = parGrid;
 		robotX = grid.getSIZE_X() / 2;
 		robotY = grid.getSIZE_Y() / 2;
 		robotDirection = N;
 		openedStates = new LinkedList<State>();
 		closedStates = new LinkedList<State>();
+		moves = new LinkedList<Move>();
 
 		int uncleaned = grid.getDirtyFields();
 
 		while (uncleaned > 0) {
+			tempStack = new Stack<Move>();
 			State tempState = new State(robotX, robotY, robotDirection, null);
+			tempState.setG(0);
+			tempState.setH(0);
+			tempState.setF();
 			purpose = findPurpose();
-			uncleaned--;
+			//uncleaned--;
 
 			openedStates.push(tempState);
 			boolean finish = false;
@@ -52,23 +59,85 @@ public class Cleaner {
 						&& currentState.getY() == purpose.getY()) {
 					uncleaned--;
 					grid.cleanField(currentState.getX(), currentState.getY());
-					// TODO dodac ruchy do kontenera je przechowujacego :)
+					robotX = currentState.getX();
+					robotY = currentState.getY();
+					robotDirection = currentState.getDirection();
+					addMovesToStack(currentState.getParent(), currentState);
+					stackToQueue();
+					finish = true;
 				} else {
 					ArrayList<State> successors = makeSuccessors(currentState);
 					for (State state : successors) {
 						openedStates.add(state);
 					}
+					if(openedStates.size()>0){
 					quickSort(openedStates, 0, openedStates.size() - 1);
+					removeDuplicates(openedStates);
+					}
 				}
 			}
-
-			grid.cleanField(purpose.getX(), purpose.getY());
-			robotX = purpose.getX();
-			robotY = purpose.getY();
-			System.out.println("X: " + purpose.getX() + " Y: " + purpose.getY()
-					+ " H: " + purpose.getH());
 		}
+		return moves;
+	}
 
+	private static void stackToQueue() {
+		while (!tempStack.empty()){
+			moves.add(tempStack.pop());
+		}
+	}
+
+	private static void addMovesToStack(State penultState, State lastState) {
+		if (penultState == null)
+			return;
+		if (penultState.getParent() == null){
+			tempStack.push(generateMove(penultState, lastState));
+			return;
+		}
+		tempStack.push(generateMove(penultState, lastState));
+		addMovesToStack(penultState.getParent(), penultState);
+	}
+	
+	
+
+	private static Move generateMove(State firstState, State secondState) {
+		if(firstState.getDirection() == secondState.getDirection()){
+			return Move.GO;
+		}
+		else{
+			if (firstState.getDirection() == N){
+				if (secondState.getDirection() == W){
+					return Move.LEFT;
+				}
+				else{
+					return Move.RIGHT;
+				}
+			}
+			if (firstState.getDirection() == S){
+				if (secondState.getDirection() == E){
+					return Move.LEFT;
+				}
+				else{
+					return Move.RIGHT;
+				}
+			}
+			if (firstState.getDirection() == W){
+				if (secondState.getDirection() == S){
+					return Move.LEFT;
+				}
+				else{
+					return Move.RIGHT;
+				}
+			}
+			if (firstState.getDirection() == E){
+				if (secondState.getDirection() == N){
+					return Move.LEFT;
+				}
+				else{
+					return Move.RIGHT;
+				}
+			}
+		}
+		return null;
 	}
 
 	public static void quickSort(LinkedList<State> openedStates, int start,
@@ -104,15 +173,13 @@ public class Cleaner {
 		int i = 1;
 		while (i <= openedStates.size() - 1) {
 			if (openedStates.get(stateIndex).equate(openedStates.get(i))) {
-				// TODO trzeba przerobic ifa
 				if (openedStates.get(stateIndex).getG() <= openedStates.get(i)
 						.getG()) {
 					openedStates.remove(i);
 				} else {
 					openedStates.remove(stateIndex);
 				}
-			}
-			else {
+			} else {
 				stateIndex++;
 				i++;
 			}
@@ -248,6 +315,8 @@ public class Cleaner {
 	}
 
 	private static boolean isClosed(int x, int y, char direction) {
+		if(x<0 || y<0 || x>=grid.getSIZE_X() || y>=grid.getSIZE_Y())
+			return true;
 		if (grid.getField(x, y) == '2')
 			return true;
 		for (State state : closedStates) {

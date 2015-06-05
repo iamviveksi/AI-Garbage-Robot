@@ -49,43 +49,15 @@ public class GarbageRobot extends BasicGame {
 
 	public static void main(String[] arguments) throws SlickException {
 
-		Random gen = new Random();
-		LinkedList<State> test = new LinkedList<State>();
-		for (int i = 1; i <= 1; i++) {
-			State stan1 = new State(gen.nextInt(20), gen.nextInt(20));
-			test.add(stan1);
-		}
-		System.out.println("Before: ");
-		for (State state : test)
-		{
-			System.out.print(state.getF() + " ");
-		}
-		Cleaner.quickSort(test, 0, test.size() - 1);
-		System.out.println("\nAfter: ");
-		for (State state : test)
-		{
-			System.out.print(state.getF() + " ");
-		}
-			
-		System.out.println("\nremove: ");
-		
-		Cleaner.removeDuplicates(test);
-		for (State state : test)
-		{
-			System.out.print(state.getF() + " ");
-		}
-			
-		System.out.println();
-
-		// StainGrid staingrid1 = new StainGrid();
-		// System.out.println();
-		// Cleaner.clean(staingrid1);
-
-		/*
-		 * StainGrid staingrid2 = new StainGrid(); System.out.println();
-		 * 
-		 * StainGrid staingrid3 = new StainGrid(); System.out.println();
-		 */
+//		LinkedList<Move> moves = new LinkedList<Move>();
+//		StainGrid staingrid1 = new StainGrid();
+//		System.out.println();
+//		moves = Cleaner.clean(staingrid1);
+//		for(Move move : moves){
+//			if(move == Move.LEFT) System.out.println("Left");
+//			if(move == Move.RIGHT) System.out.println("Right");
+//			if(move == Move.GO) System.out.println("GO!");
+//		}
 
 		robot = new Sprite();
 
