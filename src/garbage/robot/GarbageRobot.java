@@ -200,6 +200,8 @@ public class GarbageRobot extends BasicGame {
 							"poligon/stain/data-one.arff");
 					actStain.setType(type);
 					actStain.setImage("data/" + type + ".png");
+					
+					//TODO KASIA Sprzatanie
 
 					String detergent = wekaDetergent.predictDetergent(actStain,
 							"poligon/detergent/data-one.arff");
@@ -215,7 +217,6 @@ public class GarbageRobot extends BasicGame {
 
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -284,7 +285,6 @@ public class GarbageRobot extends BasicGame {
 			wekaEquipment.writeTree("poligon/equipment/tree.txt");
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		robot.init(4, 4);

@@ -1,5 +1,7 @@
 package garbage.robot;
 
+import garbage.robot.AStar.Cleaning.StainGrid;
+
 import java.util.Random;
 
 public class Stain {
@@ -26,11 +28,13 @@ public class Stain {
 	private String tool;
 	private String detergent;
 	private String image;
+	private StainGrid dirtyGrid;
 
 	// constructor
 
 	public Stain() {
 		drawParams();
+		dirtyGrid = new StainGrid();
 	}
 
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
