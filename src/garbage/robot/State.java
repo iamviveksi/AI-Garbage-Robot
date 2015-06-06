@@ -78,7 +78,7 @@ public class State {
 	
 	public void setH(DirtyField dirtyField) {
 		H = Math.abs(dirtyField.getX() - this.x)
-				+ Math.abs(dirtyField.getY() - this.y) * 10;
+				+ Math.abs(dirtyField.getY() - this.y) * 5;
 	}
 
 	public int getG() {

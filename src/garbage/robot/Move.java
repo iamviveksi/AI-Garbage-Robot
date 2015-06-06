@@ -1,5 +1,5 @@
 package garbage.robot;
 
 public enum Move {
-	LEFT,RIGHT,GO
+	LEFT,RIGHT,GO,COS
 }

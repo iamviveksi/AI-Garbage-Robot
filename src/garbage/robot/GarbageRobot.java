@@ -57,7 +57,12 @@ public class GarbageRobot extends BasicGame {
 //			if(move == Move.LEFT) System.out.println("Left");
 //			if(move == Move.RIGHT) System.out.println("Right");
 //			if(move == Move.GO) System.out.println("GO!");
+//			if(move == Move.COS) System.out.println("Cos");
 //		}
+//		
+//		System.out.println();
+//		System.out.println();
+//		staingrid1.displayGrid();
 
 		robot = new Sprite();
 

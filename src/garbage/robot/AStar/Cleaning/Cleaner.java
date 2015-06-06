@@ -3,6 +3,8 @@ package garbage.robot.AStar.Cleaning;
 import garbage.robot.Move;
 import garbage.robot.State;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -31,28 +33,40 @@ public class Cleaner {
 
 	public static LinkedList<Move> clean(StainGrid parGrid) {
 		grid = parGrid;
+//		PrintWriter zapis = null;
+//		try {
+//			zapis = new PrintWriter("log.txt");
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		robotX = grid.getSIZE_X() / 2;
 		robotY = grid.getSIZE_Y() / 2;
 		robotDirection = N;
 		openedStates = new LinkedList<State>();
 		closedStates = new LinkedList<State>();
 		moves = new LinkedList<Move>();
+		State currentState = null;
 
 		int uncleaned = grid.getDirtyFields();
 
 		while (uncleaned > 0) {
+			openedStates.clear();
+			closedStates.clear();
 			tempStack = new Stack<Move>();
 			State tempState = new State(robotX, robotY, robotDirection, null);
-			tempState.setG(0);
-			tempState.setH(0);
-			tempState.setF();
+			
 			purpose = findPurpose();
+			tempState.setG(0);
+			tempState.setH(purpose);
+			tempState.setF();
 			//uncleaned--;
-
+//			zapis.println("robotX: " + robotX + " robotY: " + robotY + " direction: " + robotDirection);
+//			zapis.println("purposeX: " + purpose.getX() + " purposeY: " + purpose.getY() + "\n");
 			openedStates.push(tempState);
 			boolean finish = false;
-			while (!openedStates.isEmpty() && !finish) {
-				State currentState = openedStates.poll();
+			while (!openedStates.isEmpty() && !finish) { 
+				currentState = openedStates.poll();
 				closedStates.push(currentState);
 				// znalezlismy
 				if (currentState.getX() == purpose.getX()
@@ -76,7 +90,17 @@ public class Cleaner {
 					}
 				}
 			}
+			if (!finish) {
+				uncleaned--;
+				robotX = tempState.getX();
+				robotY = tempState.getY();
+				robotDirection = tempState.getDirection();
+//				zapis.println("NIE ZNALAZLEM!!!!!!!!!!!!!!!");
+				grid.setField(purpose.getX(), purpose.getY(), '3');
+				
+			}
 		}
+//		zapis.close();
 		return moves;
 	}
 
@@ -109,7 +133,10 @@ public class Cleaner {
 					return Move.LEFT;
 				}
 				else{
+					if (secondState.getDirection() == E)
 					return Move.RIGHT;
+					else
+						return Move.COS;
 				}
 			}
 			if (firstState.getDirection() == S){
@@ -117,7 +144,10 @@ public class Cleaner {
 					return Move.LEFT;
 				}
 				else{
-					return Move.RIGHT;
+					if (secondState.getDirection() == W)
+						return Move.RIGHT;
+						else
+							return Move.COS;
 				}
 			}
 			if (firstState.getDirection() == W){
@@ -125,7 +155,10 @@ public class Cleaner {
 					return Move.LEFT;
 				}
 				else{
-					return Move.RIGHT;
+					if (secondState.getDirection() == N)
+						return Move.RIGHT;
+						else
+							return Move.COS;
 				}
 			}
 			if (firstState.getDirection() == E){
@@ -133,7 +166,10 @@ public class Cleaner {
 					return Move.LEFT;
 				}
 				else{
-					return Move.RIGHT;
+					if (secondState.getDirection() == S)
+						return Move.RIGHT;
+						else
+							return Move.COS;
 				}
 			}
 		}

@@ -3,16 +3,24 @@ package garbage.robot.AStar.Cleaning;
 import java.util.Random;
 
 public class StainGrid {
-	private char[][] grid;
-	private int dirtyFields;
+	private char[][] grid = {	{'1','2','0','0','0','0','0'},
+								{'2','0','1','0','0','0','0'},
+								{'0','0','0','1','0','0','0'},
+								{'1','0','0','1','0','0','0'},
+								{'0','2','2','2','0','0','0'},
+								{'0','2','1','2','0','1','0'},
+								{'0','0','0','0','0','0','0'}};
+	private int dirtyFields = 7;
 	private int obstacles;
 	private final int SIZE_X = 7;
 	private final int SIZE_Y = 7;
 
 	public StainGrid() {
-		grid = new char[SIZE_Y][SIZE_X];
-		this.generate();
-		this.displayGrid();
+		
+	grid = new char[SIZE_Y][SIZE_X];
+	this.generate();
+	//this.displayGrid();
+	
 	}
 
 	private void generate() {
@@ -40,7 +48,7 @@ public class StainGrid {
 		while (remainingObstacles > 0) {
 			randX = generator.nextInt(SIZE_X - 1);
 			randY = generator.nextInt(SIZE_Y - 1);
-			if(randX == SIZE_X / 2 && randY == SIZE_Y / 2)
+			if (randX == SIZE_X / 2 && randY == SIZE_Y / 2)
 				continue;
 			if (grid[randY][randX] != '1' && grid[randY][randX] != '2') {
 				grid[randY][randX] = '2';
@@ -49,7 +57,7 @@ public class StainGrid {
 		}
 	}
 
-	private void displayGrid() {
+	public void displayGrid() {
 		for (int i = 0; i < SIZE_Y; i++) {
 			for (int j = 0; j < SIZE_X; j++) {
 				System.out.print(grid[i][j] + " ");
@@ -57,12 +65,20 @@ public class StainGrid {
 			System.out.println();
 		}
 	}
-	
-	public char getField(int x, int y){
+
+	public void setTestGrid() {
+
+	}
+
+	public char getField(int x, int y) {
 		return grid[y][x];
 	}
-	
-	public void cleanField(int x, int y){
+
+	public void setField(int x, int y, char character) {
+		grid[y][x] = character;
+	}
+
+	public void cleanField(int x, int y) {
 		grid[y][x] = '0';
 	}
 
@@ -81,6 +97,5 @@ public class StainGrid {
 	public void setDirtyFields(int dirtyFields) {
 		this.dirtyFields = dirtyFields;
 	}
-	
-	
+
 }
