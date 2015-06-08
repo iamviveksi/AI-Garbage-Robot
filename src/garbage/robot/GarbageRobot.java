@@ -49,20 +49,24 @@ public class GarbageRobot extends BasicGame {
 
 	public static void main(String[] arguments) throws SlickException {
 
-//		LinkedList<Move> moves = new LinkedList<Move>();
-//		StainGrid staingrid1 = new StainGrid();
-//		System.out.println();
-//		moves = Cleaner.clean(staingrid1);
-//		for(Move move : moves){
-//			if(move == Move.LEFT) System.out.println("Left");
-//			if(move == Move.RIGHT) System.out.println("Right");
-//			if(move == Move.GO) System.out.println("GO!");
-//			if(move == Move.COS) System.out.println("Cos");
-//		}
-//		
-//		System.out.println();
-//		System.out.println();
-//		staingrid1.displayGrid();
+		LinkedList<Move> moves = new LinkedList<Move>();
+		StainGrid staingrid1 = new StainGrid();
+		System.out.println();
+		moves = Cleaner.clean(staingrid1);
+		for(Move move : moves){
+			if(move == Move.LEFT) System.out.println("Left");
+			if(move == Move.RIGHT) System.out.println("Right");
+			if(move == Move.GO) System.out.println("GO!");
+			if(move == Move.COS) System.out.println("Cos");
+		}
+		
+		System.out.println();
+		System.out.println();
+		staingrid1.displayGrid();
+		System.out.println();
+		System.out.println();
+		
+		
 
 		robot = new Sprite();
 
@@ -201,7 +205,7 @@ public class GarbageRobot extends BasicGame {
 					actStain.setType(type);
 					actStain.setImage("data/" + type + ".png");
 					
-					//TODO KASIA Sprzatanie
+					//TODO KASIA  Sprzatanie
 
 					String detergent = wekaDetergent.predictDetergent(actStain,
 							"poligon/detergent/data-one.arff");

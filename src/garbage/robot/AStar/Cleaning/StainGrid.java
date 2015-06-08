@@ -3,23 +3,23 @@ package garbage.robot.AStar.Cleaning;
 import java.util.Random;
 
 public class StainGrid {
-	private char[][] grid = {	{'1','2','0','0','0','0','0'},
-								{'2','0','1','0','0','0','0'},
-								{'0','0','0','1','0','0','0'},
-								{'1','0','0','1','0','0','0'},
-								{'0','2','2','2','0','0','0'},
-								{'0','2','1','2','0','1','0'},
+	private char[][] grid = {	{'0','0','1','0','0','0','0'},
+								{'0','0','1','1','2','0','0'},
+								{'0','1','0','0','0','0','0'},
+								{'2','0','2','0','1','0','0'},
+								{'2','2','0','2','1','0','0'},
+								{'0','1','1','0','0','2','0'},
 								{'0','0','0','0','0','0','0'}};
-	private int dirtyFields = 7;
+	private int dirtyFields = 8;
 	private int obstacles;
 	private final int SIZE_X = 7;
 	private final int SIZE_Y = 7;
 
 	public StainGrid() {
 		
-	grid = new char[SIZE_Y][SIZE_X];
-	this.generate();
-	//this.displayGrid();
+//	grid = new char[SIZE_Y][SIZE_X];
+//	this.generate();
+	this.displayGrid();
 	
 	}
 

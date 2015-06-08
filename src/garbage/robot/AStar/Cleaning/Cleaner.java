@@ -16,11 +16,12 @@ public class Cleaner {
 	private static int robotY;
 	private static char robotDirection;
 	private static LinkedList<State> openedStates;
-	private static LinkedList<State> closedStates;
+	// private static LinkedList<State> closedStates;
 	private static StainGrid grid;
 	private static DirtyField purpose;
 	private static LinkedList<Move> moves;
 	private static Stack<Move> tempStack;
+	private static FValue[][] tabFValues;
 
 	private final static char N = 'N';
 	private final static char W = 'W';
@@ -32,47 +33,57 @@ public class Cleaner {
 	}
 
 	public static LinkedList<Move> clean(StainGrid parGrid) {
+
 		grid = parGrid;
-//		PrintWriter zapis = null;
-//		try {
-//			zapis = new PrintWriter("log.txt");
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		tabFValues = new FValue[grid.getSIZE_Y()][grid.getSIZE_X()];
+
+		// PrintWriter zapis = null;
+		// try {
+		// zapis = new PrintWriter("log.txt");
+		// } catch (FileNotFoundException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		robotX = grid.getSIZE_X() / 2;
 		robotY = grid.getSIZE_Y() / 2;
 		robotDirection = N;
 		openedStates = new LinkedList<State>();
-		closedStates = new LinkedList<State>();
+		// closedStates = new LinkedList<State>();
 		moves = new LinkedList<Move>();
 		State currentState = null;
 
 		int uncleaned = grid.getDirtyFields();
 
 		while (uncleaned > 0) {
+
+			clearFValuesTab();
 			openedStates.clear();
-			closedStates.clear();
+			// closedStates.clear();
 			tempStack = new Stack<Move>();
 			State tempState = new State(robotX, robotY, robotDirection, null);
-			
+
 			purpose = findPurpose();
 			tempState.setG(0);
 			tempState.setH(purpose);
 			tempState.setF();
-			//uncleaned--;
-//			zapis.println("robotX: " + robotX + " robotY: " + robotY + " direction: " + robotDirection);
-//			zapis.println("purposeX: " + purpose.getX() + " purposeY: " + purpose.getY() + "\n");
+			// uncleaned--;
+			// zapis.println("robotX: " + robotX + " robotY: " + robotY
+			// + " direction: " + robotDirection);
+			// zapis.println("purposeX: " + purpose.getX() + " purposeY: "
+			// + purpose.getY() + "\n");
 			openedStates.push(tempState);
+			setFValue(tempState);
 			boolean finish = false;
-			while (!openedStates.isEmpty() && !finish) { 
+
+			while (!openedStates.isEmpty() && !finish) {
 				currentState = openedStates.poll();
-				closedStates.push(currentState);
+				// closedStates.push(currentState);
+				setFValueToClose(currentState);
 				// znalezlismy
 				if (currentState.getX() == purpose.getX()
 						&& currentState.getY() == purpose.getY()) {
 					uncleaned--;
-					grid.cleanField(currentState.getX(), currentState.getY());
+					grid.cleanField(currentState.getX(), currentState.getY()); 
 					robotX = currentState.getX();
 					robotY = currentState.getY();
 					robotDirection = currentState.getDirection();
@@ -82,11 +93,7 @@ public class Cleaner {
 				} else {
 					ArrayList<State> successors = makeSuccessors(currentState);
 					for (State state : successors) {
-						openedStates.add(state);
-					}
-					if(openedStates.size()>0){
-					quickSort(openedStates, 0, openedStates.size() - 1);
-					removeDuplicates(openedStates);
+						addStateToOpenList(state);
 					}
 				}
 			}
@@ -95,131 +102,200 @@ public class Cleaner {
 				robotX = tempState.getX();
 				robotY = tempState.getY();
 				robotDirection = tempState.getDirection();
-//				zapis.println("NIE ZNALAZLEM!!!!!!!!!!!!!!!");
+				// zapis.println("NIE ZNALAZLEM!!!!!!!!!!!!!!!");
 				grid.setField(purpose.getX(), purpose.getY(), '3');
-				
+
 			}
 		}
-//		zapis.close();
+		// zapis.close();
 		return moves;
 	}
 
+	private static void addStateToOpenList(State state) {
+
+		int placeToPush = -1; // wynik
+		int pb = 0; // wskaznik na poczatek
+		int pe = openedStates.size() - 1; // wskaznik na koniec
+		int pc; // wskaznik na srodek
+
+		// nie ma do tej pory stanu w liœcie otwartych
+		if (getFValue(state.getX(), state.getY(), state.getDirection()) == 0) {
+			while (pb <= pe) {
+				pc = (pb + pe) / 2;
+				if ((pc + 1) < openedStates.size())
+					if (state.getF() <= openedStates.get(pc).getF()
+							&& state.getF() >= openedStates.get(pc + 1).getF()) {
+						placeToPush = pc;
+						break;
+					}
+
+				if (state.getF() < openedStates.get(pc).getF())
+					pe = pc - 1;
+				else
+					pb = pc + 1;
+			}
+			if (placeToPush == -1)
+				openedStates.add(state);
+			else
+				openedStates.add(placeToPush, state);
+
+			// stan jest juz w otwartych i trzeba go znalezc i ew zaktualizowac
+		} else {
+			while (pb <= pe) {
+				pc = (pb + pe) / 2;
+
+				if (state.getF() == openedStates.get(pc).getF()) {
+					placeToPush = pc;
+					break;
+				}
+
+				if (state.getF() < openedStates.get(pc).getF())
+					pe = pc - 1;
+				else
+					pb = pc + 1;
+			}
+			int i = 0;
+			boolean finish = false;
+			while ((openedStates.get(placeToPush + i).getF() == state.getF())
+					&& ((placeToPush - i) >= 0)) {
+				if (openedStates.get(placeToPush + i).equate(state)) {
+					if (openedStates.get(placeToPush + i).getG() > state.getG()) {
+						openedStates.set(placeToPush + i, state);
+					}
+					finish = true;
+					break;
+				}
+				i--;
+			}
+			i = 1;
+			while ((openedStates.get(placeToPush + i).getF() == state.getF() && (placeToPush + i) < openedStates
+					.size()) && !finish) {
+				if (openedStates.get(placeToPush + i).equate(state)) {
+					if (openedStates.get(placeToPush + i).getG() > state.getG()) {
+						openedStates.set(placeToPush + i, state);
+
+					}
+					break;
+				}
+				i++;
+			}
+		}
+	}
+
+	private static void setFValue(State parState) {
+		switch (parState.getDirection()) {
+		case 'N': {
+			tabFValues[parState.getY()][parState.getX()].setfN(parState.getF());
+			break;
+		}
+		case 'S': {
+			tabFValues[parState.getY()][parState.getX()].setfS(parState.getF());
+			break;
+		}
+		case 'W': {
+			tabFValues[parState.getY()][parState.getX()].setfW(parState.getF());
+			break;
+		}
+		case 'E': {
+			tabFValues[parState.getY()][parState.getX()].setfE(parState.getF());
+			break;
+		}
+		}
+	}
+
+	private static void setFValueToClose(State parState) {
+		switch (parState.getDirection()) {
+		case 'N': {
+			tabFValues[parState.getY()][parState.getX()].setfN(-1);
+			break;
+		}
+		case 'S': {
+			tabFValues[parState.getY()][parState.getX()].setfS(-1);
+			break;
+		}
+		case 'W': {
+			tabFValues[parState.getY()][parState.getX()].setfW(-1);
+			break;
+		}
+		case 'E': {
+			tabFValues[parState.getY()][parState.getX()].setfE(-1);
+			break;
+		}
+		}
+	}
+
+	private static void clearFValuesTab() {
+		for (int i = 0; i < grid.getSIZE_Y(); i++) {
+			for (int j = 0; j < grid.getSIZE_X(); j++) {
+				tabFValues[i][j] = new FValue();
+			}
+		}
+
+	}
+
 	private static void stackToQueue() {
-		while (!tempStack.empty()){
+		while (!tempStack.empty()) {
 			moves.add(tempStack.pop());
 		}
 	}
 
 	private static void addMovesToStack(State penultState, State lastState) {
-		if (penultState == null)
+		if (penultState == null) // niepotrzebne
 			return;
-		if (penultState.getParent() == null){
+		if (penultState.getParent() == null) {
 			tempStack.push(generateMove(penultState, lastState));
 			return;
 		}
 		tempStack.push(generateMove(penultState, lastState));
 		addMovesToStack(penultState.getParent(), penultState);
 	}
-	
-	
 
 	private static Move generateMove(State firstState, State secondState) {
-		if(firstState.getDirection() == secondState.getDirection()){
+		if (firstState.getDirection() == secondState.getDirection()) {
 			return Move.GO;
-		}
-		else{
-			if (firstState.getDirection() == N){
-				if (secondState.getDirection() == W){
+		} else {
+			if (firstState.getDirection() == N) {
+				if (secondState.getDirection() == W) {
 					return Move.LEFT;
-				}
-				else{
+				} else {
 					if (secondState.getDirection() == E)
-					return Move.RIGHT;
+						return Move.RIGHT;
 					else
 						return Move.COS;
 				}
 			}
-			if (firstState.getDirection() == S){
-				if (secondState.getDirection() == E){
+			if (firstState.getDirection() == S) {
+				if (secondState.getDirection() == E) {
 					return Move.LEFT;
-				}
-				else{
+				} else {
 					if (secondState.getDirection() == W)
 						return Move.RIGHT;
-						else
-							return Move.COS;
+					else
+						return Move.COS;
 				}
 			}
-			if (firstState.getDirection() == W){
-				if (secondState.getDirection() == S){
+			if (firstState.getDirection() == W) {
+				if (secondState.getDirection() == S) {
 					return Move.LEFT;
-				}
-				else{
+				} else {
 					if (secondState.getDirection() == N)
 						return Move.RIGHT;
-						else
-							return Move.COS;
+					else
+						return Move.COS;
 				}
 			}
-			if (firstState.getDirection() == E){
-				if (secondState.getDirection() == N){
+			if (firstState.getDirection() == E) {
+				if (secondState.getDirection() == N) {
 					return Move.LEFT;
-				}
-				else{
+				} else {
 					if (secondState.getDirection() == S)
 						return Move.RIGHT;
-						else
-							return Move.COS;
+					else
+						return Move.COS;
 				}
 			}
 		}
 		return null;
-	}
-
-	public static void quickSort(LinkedList<State> openedStates, int start,
-			int finish) {
-
-		int i, j, v;
-		State temp;
-
-		i = start;
-		j = finish;
-		v = openedStates.get((start + finish) / 2).getF();
-		do {
-			while (openedStates.get(i).getF() < v)
-				i++;
-			while (v < openedStates.get(j).getF())
-				j--;
-			if (i <= j) {
-				temp = new State(openedStates.get(i));
-				openedStates.set(i, new State(openedStates.get(j)));
-				openedStates.set(j, temp);
-				i++;
-				j--;
-			}
-		} while (i <= j);
-		if (start < j)
-			quickSort(openedStates, start, j);
-		if (i < finish)
-			quickSort(openedStates, i, finish);
-	}
-
-	public static void removeDuplicates(LinkedList<State> openedStates) {
-		int stateIndex = 0;
-		int i = 1;
-		while (i <= openedStates.size() - 1) {
-			if (openedStates.get(stateIndex).equate(openedStates.get(i))) {
-				if (openedStates.get(stateIndex).getG() <= openedStates.get(i)
-						.getG()) {
-					openedStates.remove(i);
-				} else {
-					openedStates.remove(stateIndex);
-				}
-			} else {
-				stateIndex++;
-				i++;
-			}
-		}
 	}
 
 	private static ArrayList<State> makeSuccessors(State currentState) {
@@ -351,17 +427,21 @@ public class Cleaner {
 	}
 
 	private static boolean isClosed(int x, int y, char direction) {
-		if(x<0 || y<0 || x>=grid.getSIZE_X() || y>=grid.getSIZE_Y())
+
+		if (x < 0 || y < 0 || x >= grid.getSIZE_X() || y >= grid.getSIZE_Y())
 			return true;
 		if (grid.getField(x, y) == '2')
 			return true;
-		for (State state : closedStates) {
-			if (state.getX() == x && state.getY() == y
-					&& state.getDirection() == direction) {
-				return true;
-			}
+
+		// sprawdza czy pole stan jest na liscie zamknietych
+		if (getFValue(x, y, direction) == -1) {
+			return true;
 		}
 		return false;
+	}
+
+	private static int getFValue(int x, int y, char direction) {
+		return tabFValues[y][x].getValue(direction);
 	}
 
 	private static int calculateDistance(int xA, int yA, int xB, int yB) {
@@ -384,76 +464,76 @@ public class Cleaner {
 			for (int i = (robotX - dist >= 0 ? robotX - dist : 0); i <= (robotX
 					+ dist < grid.getSIZE_X() - 1 ? robotX + dist : grid
 					.getSIZE_X() - 1); i++) {
-				int verge = (robotY - dist) >= 0 ? (robotY - dist) : 0;
+				int edge = (robotY - dist) >= 0 ? (robotY - dist) : 0;
 				try {
-					if (grid.getField(i, verge) == '1') {
+					if (grid.getField(i, edge) == '1') {
 						tempField = new DirtyField();
 						tempField.setX(i);
-						tempField.setY(verge);
+						tempField.setY(edge);
 						tempField.setH(calculateDistance(robotX, robotY, i,
-								verge));
+								edge));
 						dirtyFields.add(tempField);
 						isStainFound = true;
 					}
 				} catch (IndexOutOfBoundsException e) {
-					System.err.println("blad gora x:" + i + " y: " + verge);
+					System.err.println("blad gora x:" + i + " y: " + edge);
 				}
 			}
 			for (int i = (robotY - dist >= 0 ? robotY - dist : 0); i <= (robotY
 					+ dist < grid.getSIZE_Y() - 1 ? robotY + dist : grid
 					.getSIZE_Y() - 1); i++) {
-				int verge = (robotX + dist) < grid.getSIZE_X() ? (robotX + dist)
+				int edge = (robotX + dist) < grid.getSIZE_X() ? (robotX + dist)
 						: grid.getSIZE_X() - 1;
 				try {
-					if (grid.getField(verge, i) == '1') {
+					if (grid.getField(edge, i) == '1') {
 						tempField = new DirtyField();
-						tempField.setX(verge);
+						tempField.setX(edge);
 						tempField.setY(i);
-						tempField.setH(calculateDistance(robotX, robotY, verge,
+						tempField.setH(calculateDistance(robotX, robotY, edge,
 								i));
 						dirtyFields.add(tempField);
 						isStainFound = true;
 					}
 				} catch (IndexOutOfBoundsException e) {
-					System.err.println("blad prawo x:" + (verge) + " y: " + i);
+					System.err.println("blad prawo x:" + (edge) + " y: " + i);
 				}
 			}
 			for (int i = (robotX - dist >= 0 ? robotX - dist : 0); i <= (robotX
 					+ dist < grid.getSIZE_X() - 1 ? robotX + dist : grid
 					.getSIZE_X() - 1); i++) {
-				int verge = (robotY + dist) < grid.getSIZE_Y() ? (robotY + dist)
+				int edge = (robotY + dist) < grid.getSIZE_Y() ? (robotY + dist)
 						: grid.getSIZE_Y() - 1;
 				try {
-					if (grid.getField(i, verge) == '1') {
+					if (grid.getField(i, edge) == '1') {
 						tempField = new DirtyField();
 						tempField.setX(i);
-						tempField.setY(verge);
+						tempField.setY(edge);
 						tempField.setH(calculateDistance(robotX, robotY, i,
-								verge));
+								edge));
 						dirtyFields.add(tempField);
 						isStainFound = true;
 					}
 				} catch (IndexOutOfBoundsException e) {
-					System.err.println("blad dol x:" + i + " y: " + verge);
+					System.err.println("blad dol x:" + i + " y: " + edge);
 				}
 			}
 			for (int i = (robotY - dist >= 0 ? robotY - dist : 0); i <= (robotY
 					+ dist < grid.getSIZE_Y() - 1 ? robotY + dist : grid
 					.getSIZE_Y() - 1); i++) {
-				int verge = (robotX - dist) >= 0 ? (robotX - dist) : 0;
+				int edge = (robotX - dist) >= 0 ? (robotX - dist) : 0;
 				try {
 
-					if (grid.getField(verge, i) == '1') {
+					if (grid.getField(edge, i) == '1') {
 						tempField = new DirtyField();
-						tempField.setX(verge);
+						tempField.setX(edge);
 						tempField.setY(i);
-						tempField.setH(calculateDistance(robotX, robotY, verge,
+						tempField.setH(calculateDistance(robotX, robotY, edge,
 								i));
 						dirtyFields.add(tempField);
 						isStainFound = true;
 					}
 				} catch (IndexOutOfBoundsException e) {
-					System.err.println("blad lewo x:" + (verge) + " y: " + i);
+					System.err.println("blad lewo x:" + (edge) + " y: " + i);
 				}
 
 			}

@@ -28,13 +28,13 @@ public class Stain {
 	private String tool;
 	private String detergent;
 	private String image;
-	private StainGrid dirtyGrid;
+//	private StainGrid dirtyGrid;
 
 	// constructor
 
 	public Stain() {
 		drawParams();
-		dirtyGrid = new StainGrid();
+//		dirtyGrid = new StainGrid();
 	}
 
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
