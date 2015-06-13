@@ -114,6 +114,7 @@ elif res[1] >= res[3]:
 else:
 	trash = "no trash"	
 
-print "\nTrash: "
-sys.stdout.write(trash)
-print "\n\nTrashes: " + "\n" + "reusable: " + str(reusable) + "\n" + "dregs: " + str(dregs) + "\n" + "infected: " + str(infected)
+# print "\nTrash: "
+# sys.stdout.write(trash)
+# print "\n\nTrashes: " + "\n" + "reusable: " + str(reusable) + "\n" + "dregs: " + str(dregs) + "\n" + "infected: " + str(infected)
+print trash
