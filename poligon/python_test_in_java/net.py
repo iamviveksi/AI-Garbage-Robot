@@ -82,9 +82,9 @@ ann.create_from_file("xor.net")
 res = ann.run([rubbish, detergent, equipment])
 
 # TUTAJ jest problem - ustalam zmienne do zliczania pojemnosci koszy. Te zmnienne powinny zostac ustalone wczesniej, jesli pozostana tutaj, przy kazdym smieciu beda sie zerowac, a przeciez nie o to nam chodzi.
-reusable = 0
-dregs = 0
-infected = 0
+# reusable = 0
+# dregs = 0
+# infected = 0
 
 # wytypowanie kosza, do ktorego trzeba wrzucic smiec 
 trash = ""
@@ -94,23 +94,23 @@ if res[2] >= res[0]:
 	if res[2] >= res[1]:
 		if res[2] >= res[3]:
 			trash = "infected"
-			infected = infected + 1
+			# infected = infected + 1
 		else:
 			trash = "no trash"
 	elif res[1] >= res[3]:
 		trash = "dregs"
-		dregs = dregs + 1
+		# dregs = dregs + 1
 	else:
 		trash = "no trash"
 elif res[0] >= res[1]:
 	if res[0] >= res[3]:
 		trash = "reusable"
-		reusable = reusable + 1
+		# reusable = reusable + 1
 	else:
 		trash = "no trash"
 elif res[1] >= res[3]:
 	trash = "dregs"
-	dregs = dregs + 1
+	# dregs = dregs + 1
 else:
 	trash = "no trash"	
 
