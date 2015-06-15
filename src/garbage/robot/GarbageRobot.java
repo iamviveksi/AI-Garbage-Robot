@@ -219,39 +219,12 @@ public class GarbageRobot extends BasicGame {
 					actStain.setTool(equipment);
 					if (!tools.contains(equipment))
 						tools = tools + equipment + "\n";
-					/*					
-					String[]callAndArgs = {"python", "net.py", type, detergent, equipment}; //arguments
-		            Process p = Runtime.getRuntime().exec(callAndArgs);    
-		            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		            //BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-		            
-		            String s = stdInput.readLine();
-		            System.out.println(s);*/
-					String s = null;
-			        try {
-			            String[]callAndArgs = {"python", "net.py", type, detergent, equipment}; //arguments
-			            Process p = Runtime.getRuntime().exec(callAndArgs);    
-			            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-
-			            //output
-			            while ((s = stdInput.readLine()) != null) {
-//			                System.out.println(s);
-			                trash = s;
-			            }
-
-			            while ((s = stdError.readLine()) != null) {
-//			                System.out.println(s);
-			                trash = s;
-			            }
-			        }
-
-			        catch (IOException e) {
-			            System.out.println("exception occured");
-			            e.printStackTrace();
-			            System.exit(-1);
-			        }
-
+					
+					
+			       trash = addToBin(type, detergent, equipment);
+					//trash = "kosz";
+					
+					
 					
 					
 				}
@@ -534,6 +507,31 @@ public class GarbageRobot extends BasicGame {
 		}
 
 		return ret;
+	}
+	
+	private String addToBin (String parStain, String parDet, String parEq){
+		 String s,er,ret = "";
+	        try {
+	            String[]callAndArgs = {"python", "net.py", parStain, parDet, parEq}; //arguments
+	            Process p = Runtime.getRuntime().exec(callAndArgs);    
+	            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+	            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+	            //output
+	            while ((s = stdInput.readLine()) != null) {
+	                ret+=s;
+	            }
+
+	            while ((er = stdError.readLine()) != null) {
+	            	ret+=s;
+	            }
+	          return ret;
+	        }catch (IOException e) {
+	            System.err.println("Python problem");
+	            e.printStackTrace();
+	           // System.exit(-1);
+	            return "problem z pythonem";
+	        }
 	}
 
 	public static int getTilesX() {
