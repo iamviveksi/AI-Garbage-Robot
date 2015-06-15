@@ -28,13 +28,16 @@ public class Stain {
 	private String tool;
 	private String detergent;
 	private String image;
-//	private StainGrid dirtyGrid;
+	private StainGrid dirtyGrid;
+	private boolean cleaned;
 
 	// constructor
 
 	public Stain() {
 		drawParams();
-//		dirtyGrid = new StainGrid();
+		dirtyGrid = new StainGrid();
+		cleaned = false;
+		
 	}
 
 	public Stain(int xPos, int yPos, int wetness, int colorIntensity,
@@ -290,4 +293,23 @@ public class Stain {
 	public void setImage(String i) {
 		this.image = i;
 	}
+
+	public boolean isCleaned() {
+		return cleaned;
+	}
+
+	public void setCleaned(boolean cleaned) {
+		this.cleaned = cleaned;
+	}
+
+	public StainGrid getDirtyGrid() {
+		return dirtyGrid;
+	}
+
+	public void setDirtyGrid(StainGrid dirtyGrid) {
+		this.dirtyGrid = dirtyGrid;
+	}
+	
+	
+	
 }

@@ -17,10 +17,25 @@ public class StainGrid {
 
 	public StainGrid() {
 		
-//	grid = new char[SIZE_Y][SIZE_X];
-//	this.generate();
-	this.displayGrid();
+	grid = new char[SIZE_Y][SIZE_X];
+	this.generate();
+	//this.displayGrid();
 	
+	
+	}
+	public StainGrid (StainGrid par){
+		newGridFromOther(par);
+		this.dirtyFields = par.getDirtyFields();
+		this.obstacles = par.getObstacles();
+	}
+	
+	
+	private void newGridFromOther(StainGrid par){
+		for (int i = 0; i < SIZE_Y; i++) {
+			for (int j = 0; j < SIZE_X; j++) {
+				grid[i][j] = par.getField(j, i);
+			}
+		}
 	}
 
 	private void generate() {
@@ -97,5 +112,22 @@ public class StainGrid {
 	public void setDirtyFields(int dirtyFields) {
 		this.dirtyFields = dirtyFields;
 	}
+
+	public char[][] getGrid() {
+		return grid;
+	}
+
+	public void setGrid(char[][] grid) {
+		this.grid = grid;
+	}
+	public int getObstacles() {
+		return obstacles;
+	}
+	public void setObstacles(int obstacles) {
+		this.obstacles = obstacles;
+	}
+	
+	
+	
 
 }
