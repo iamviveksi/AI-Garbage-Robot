@@ -16,7 +16,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+
 import java.io.*;
+
 //need to extend BasicGame
 
 public class GarbageRobot extends BasicGame {
@@ -40,6 +42,9 @@ public class GarbageRobot extends BasicGame {
 	private String detergents = "";
 	private String backpack = "";
 	private String trash = "";
+	private boolean cleaning;
+	private LinkedList<Move> movesToClean;
+	private StainGrid currGrid;
 
 	public GarbageRobot() {
 		// text in the main window
@@ -54,20 +59,22 @@ public class GarbageRobot extends BasicGame {
 		StainGrid staingrid1 = new StainGrid();
 		System.out.println();
 		moves = Cleaner.clean(staingrid1);
-		for(Move move : moves){
-			if(move == Move.LEFT) System.out.println("Left");
-			if(move == Move.RIGHT) System.out.println("Right");
-			if(move == Move.GO) System.out.println("GO!");
-			if(move == Move.COS) System.out.println("Cos");
+		for (Move move : moves) {
+			if (move == Move.LEFT)
+				System.out.println("Left");
+			if (move == Move.RIGHT)
+				System.out.println("Right");
+			if (move == Move.GO)
+				System.out.println("GO!");
+			if (move == Move.COS)
+				System.out.println("Cos");
 		}
-		
+
 		System.out.println();
 		System.out.println();
 		staingrid1.displayGrid();
 		System.out.println();
 		System.out.println();
-		
-		
 
 		robot = new Sprite();
 
@@ -129,7 +136,7 @@ public class GarbageRobot extends BasicGame {
 	}
 
 	// method draw elements on screen
-	
+
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
 		// floor
@@ -192,87 +199,148 @@ public class GarbageRobot extends BasicGame {
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 30f);
 		g.drawString("----------------------------", 1050f, 50f);
 		g.setColor(Color.green);
-//		g.drawString("BACKPACK: ", 1050f, 570f);
-//		g.setColor(Color.white);
-//		g.drawString(backpack, 1050f, 590f);
+		// g.drawString("BACKPACK: ", 1050f, 570f);
+		// g.setColor(Color.white);
+		// g.drawString(backpack, 1050f, 590f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 
 			Stain actStain = getStainByPosition(robot.getXMap(),
 					robot.getYMap());
 			try {
 				if (!robot.isMoving()) {
-					String type = weka.predictItem(actStain,
-							"poligon/stain/data-one.arff");
-					actStain.setType(type);
-					actStain.setImage("data/" + type + ".png");
-					
-					//TODO KASIA  Sprzatanie
+					if (!actStain.isCleaned()) {
+						String type = weka.predictItem(actStain,
+								"poligon/stain/data-one.arff");
+						actStain.setType(type);
+						actStain.setImage("data/" + type + ".png");
 
-					String detergent = wekaDetergent.predictDetergent(actStain,
-							"poligon/detergent/data-one.arff");
-					actStain.setDetergent(detergent);
-					if (!detergents.contains(detergent))
-						detergents = detergents + detergent + "\n";
+						// TODO KASIA Sprzatanie
 
-					String equipment = wekaEquipment.predictEquipment(actStain,
-							"poligon/equipment/data-one.arff");
-					actStain.setTool(equipment);
-					if (!tools.contains(equipment))
-						tools = tools + equipment + "\n";
-					
-					
-			       trash = addToBin(type, detergent, equipment);
-					//trash = "kosz";
-					
-					
-					
-					
+						String detergent = wekaDetergent.predictDetergent(
+								actStain, "poligon/detergent/data-one.arff");
+						actStain.setDetergent(detergent);
+						if (!detergents.contains(detergent))
+							detergents = detergents + detergent + "\n";
+
+						String equipment = wekaEquipment.predictEquipment(
+								actStain, "poligon/equipment/data-one.arff");
+						actStain.setTool(equipment);
+						if (!tools.contains(equipment))
+							tools = tools + equipment + "\n";
+
+						// Podprojekt Uli
+						trash = addToBin(type, detergent, equipment);
+
+						// Podprojekt Kasi
+						currGrid = new StainGrid(actStain.getDirtyGrid());
+						movesToClean = Cleaner.clean(actStain.getDirtyGrid());
+						actStain.setCleaned(true);
+
+						// trash = "kosz";
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			g.setColor(Color.white);
-			g.drawString("Wetness: " + actStain.getWetness(), 1050f, 70f);
-			g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
-					1050f, 90f);
-			g.drawString("SmellIntensity: " + actStain.getSmellIntensity(),
-					1050f, 110f);
-			g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 130f);
-			g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 150f);
-			g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 170f);
-			g.drawString("Roughness: " + actStain.getRoughness(), 1050f, 190f);
-			g.drawString(
-					"Dangerous Bacteries: " + actStain.getDangerousBacteries(),
-					1050f, 210f);
-			g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 230f);
-			g.drawString("Density: " + actStain.getDensity(), 1050f, 250f);
-			g.setColor(Color.red);
-			g.drawString("TYPE: " + actStain.getType(), 1050f, 270f);
+			if (!cleaning) {
+				g.setColor(Color.white);
+				g.drawString("Wetness: " + actStain.getWetness(), 1050f, 70f);
+				g.drawString("ColorIntensity: " + actStain.getColorIntensity(),
+						1050f, 90f);
+				g.drawString("SmellIntensity: " + actStain.getSmellIntensity(),
+						1050f, 110f);
+				g.drawString("Is Sticky?: " + actStain.isSticky(), 1050f, 130f);
+				g.drawString("Is Dried?: " + actStain.isDried(), 1050f, 150f);
+				g.drawString("Is Greasy?: " + actStain.isGreasy(), 1050f, 170f);
+				g.drawString("Roughness: " + actStain.getRoughness(), 1050f,
+						190f);
+				g.drawString(
+						"Dangerous Bacteries: "
+								+ actStain.getDangerousBacteries(), 1050f, 210f);
+				g.drawString("Is Fruity?: " + actStain.isFruity(), 1050f, 230f);
+				g.drawString("Density: " + actStain.getDensity(), 1050f, 250f);
+				g.setColor(Color.red);
+				g.drawString("TYPE: " + actStain.getType(), 1050f, 270f);
 
-			g.setColor(Color.white);
-			g.drawString("Age: " + actStain.getAge(), 1050f, 310f);
-			g.drawString("Type: " + actStain.getType(), 1050f, 330f);
-			g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
-			g.drawString("Base state: " + actStain.getBaseState(), 1050f, 370f);
-			g.drawString("Chemicals: " + actStain.getChemicals(), 1050f, 390f);
-			g.drawString("Is Poisonous?: " + actStain.isPoisonous(), 1050f,
-					410f);
-			g.setColor(Color.red);
-			g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f, 430f);
+				g.setColor(Color.white);
+				g.drawString("Age: " + actStain.getAge(), 1050f, 310f);
+				g.drawString("Type: " + actStain.getType(), 1050f, 330f);
+				g.drawString("Base: " + actStain.getBase(), 1050f, 350f);
+				g.drawString("Base state: " + actStain.getBaseState(), 1050f,
+						370f);
+				g.drawString("Chemicals: " + actStain.getChemicals(), 1050f,
+						390f);
+				g.drawString("Is Poisonous?: " + actStain.isPoisonous(), 1050f,
+						410f);
+				g.setColor(Color.red);
+				g.drawString("DETERGENT: " + actStain.getDetergent(), 1050f,
+						430f);
 
-			g.setColor(Color.white);
-			g.drawString("Is Tall?: " + actStain.isTall(), 1050f, 470f);
-			g.drawString("Size: " + actStain.getSize(), 1050f, 490f);
-			g.drawString("Detergent: " + actStain.getDetergent(), 1050f, 510f);
-			g.setColor(Color.red);
-			g.drawString("EQUIPMENT: " + actStain.getTool(), 1050f, 530f);
+				g.setColor(Color.white);
+				g.drawString("Is Tall?: " + actStain.isTall(), 1050f, 470f);
+				g.drawString("Size: " + actStain.getSize(), 1050f, 490f);
+				g.drawString("Detergent: " + actStain.getDetergent(), 1050f,
+						510f);
+				g.setColor(Color.red);
+				g.drawString("EQUIPMENT: " + actStain.getTool(), 1050f, 530f);
 
-			g.setColor(Color.green);
-			g.drawString("TRASH: ", 1050f, 570f);
-			g.setColor(Color.white);
-			g.drawString(trash, 1050f, 590f);
-
+				g.setColor(Color.green);
+				g.drawString("TRASH: ", 1050f, 570f);
+				g.setColor(Color.white);
+				g.drawString(trash, 1050f, 590f);
+			} else { // Sprzatanie
+				cleaning = false;
+				float shiftX = 0;
+				float shiftY = 0;
+				String fieldToDraw = "";
+				if(currGrid != null)
+				for (int i = 0; i < currGrid.getSIZE_Y(); i++) {
+					for (int j = 0; j < currGrid.getSIZE_X(); j++) {
+						fieldToDraw += currGrid.getField(j, i);
+						g.drawString(fieldToDraw, 1050f + shiftX, 70f + shiftY);
+						shiftX += 20;
+						fieldToDraw = "";
+					}
+					shiftX = 0;
+					shiftY += 20;
+				}
+				shiftX = 0;
+				shiftY = 0;
+				for (int i = 0; i < actStain.getDirtyGrid().getSIZE_Y(); i++) {
+					for (int j = 0; j < actStain.getDirtyGrid().getSIZE_X(); j++) {
+						fieldToDraw += actStain.getDirtyGrid().getField(j, i);
+						g.drawString(fieldToDraw, 1050f + shiftX, 250f + shiftY);
+						shiftX += 20;
+						fieldToDraw = "";
+					}
+					shiftX = 0;
+					shiftY += 20;
+				}
+				g.drawString("Moves:", 1050f, 430f);
+				
+				shiftX = 0;
+				shiftY = 0;
+				for(Move move : movesToClean){
+					if(shiftX >= 150){
+						shiftX = 0;
+						shiftY += 20;
+					}
+					
+					if (move == Move.LEFT)
+						g.drawString("L", 1050f + shiftX, 450f + shiftY);
+					if (move == Move.RIGHT)
+						g.drawString("R", 1050f + shiftX, 450f + shiftY);
+					if (move == Move.GO)
+						g.drawString("G", 1050f + shiftX, 450f + shiftY);
+					if (move == Move.COS)
+						g.drawString("E", 1050f + shiftX, 450f + shiftY);
+					
+					shiftX += 15;
+					
+				}
+				
+			}
 		} else {
 			g.drawString("Needed detergents: ", 1050f, 70f);
 			g.drawString(detergents, 1050f, 90f);
@@ -284,7 +352,7 @@ public class GarbageRobot extends BasicGame {
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		try {
-
+			cleaning = false;
 			weka = new Weka("poligon/stain/data-learning.arff",
 					"poligon/stain/data-test.arff");
 			weka.writePredictions("poligon/stain/data-predicted.arff");
@@ -462,6 +530,10 @@ public class GarbageRobot extends BasicGame {
 					robot.setXMap(robot.getXMap() + 1);
 				}
 			}
+
+		} else if (input.isKeyDown(Input.KEY_C)) {
+			cleaning = true;
+
 		} else {
 			if (shiftX != 0) {
 				robot.setXDisp(robot.getXDisp() - shiftX);
@@ -508,30 +580,33 @@ public class GarbageRobot extends BasicGame {
 
 		return ret;
 	}
-	
-	private String addToBin (String parStain, String parDet, String parEq){
-		 String s,er,ret = "";
-	        try {
-	            String[]callAndArgs = {"python", "net.py", parStain, parDet, parEq}; //arguments
-	            Process p = Runtime.getRuntime().exec(callAndArgs);    
-	            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-	            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-	            //output
-	            while ((s = stdInput.readLine()) != null) {
-	                ret+=s;
-	            }
+	private String addToBin(String parStain, String parDet, String parEq) {
+		String s, er, ret = "";
+		try {
+			String[] callAndArgs = { "python", "net.py", parStain, parDet,
+					parEq }; // arguments
+			Process p = Runtime.getRuntime().exec(callAndArgs);
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
+			BufferedReader stdError = new BufferedReader(new InputStreamReader(
+					p.getErrorStream()));
 
-	            while ((er = stdError.readLine()) != null) {
-	            	ret+=s;
-	            }
-	          return ret;
-	        }catch (IOException e) {
-	            System.err.println("Python problem");
-	            e.printStackTrace();
-	           // System.exit(-1);
-	            return "problem z pythonem";
-	        }
+			// output
+			while ((s = stdInput.readLine()) != null) {
+				ret += s;
+			}
+
+			while ((er = stdError.readLine()) != null) {
+				ret += s;
+			}
+			return ret;
+		} catch (IOException e) {
+			System.err.println("Python problem");
+			e.printStackTrace();
+			// System.exit(-1);
+			return "problem z pythonem";
+		}
 	}
 
 	public static int getTilesX() {
