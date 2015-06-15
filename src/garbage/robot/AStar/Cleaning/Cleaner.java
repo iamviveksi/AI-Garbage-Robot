@@ -1,7 +1,7 @@
 package garbage.robot.AStar.Cleaning;
 
-import garbage.robot.Move;
-import garbage.robot.State;
+import garbage.robot.AStar.Cleaning.*;
+import garbage.robot.*;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -118,7 +118,7 @@ public class Cleaner {
 		int pe = openedStates.size() - 1; // wskaznik na koniec
 		int pc; // wskaznik na srodek
 
-		// nie ma do tej pory stanu w liœcie otwartych
+		// nie ma do tej pory stanu w liï¿½cie otwartych
 		if (getFValue(state.getX(), state.getY(), state.getDirection()) == 0) {
 			while (pb <= pe) {
 				pc = (pb + pe) / 2;

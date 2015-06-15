@@ -16,7 +16,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-
+import java.io.*;
 //need to extend BasicGame
 
 public class GarbageRobot extends BasicGame {
@@ -39,6 +39,7 @@ public class GarbageRobot extends BasicGame {
 	private String tools = "";
 	private String detergents = "";
 	private String backpack = "";
+	private String trash = "";
 
 	public GarbageRobot() {
 		// text in the main window
@@ -128,7 +129,7 @@ public class GarbageRobot extends BasicGame {
 	}
 
 	// method draw elements on screen
-	@Override
+	
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
 		// floor
@@ -191,9 +192,9 @@ public class GarbageRobot extends BasicGame {
 		g.drawString("PosY: " + robot.getYDisp(), 1050f, 30f);
 		g.drawString("----------------------------", 1050f, 50f);
 		g.setColor(Color.green);
-		g.drawString("BACKPACK: ", 1050f, 570f);
-		g.setColor(Color.white);
-		g.drawString(backpack, 1050f, 590f);
+//		g.drawString("BACKPACK: ", 1050f, 570f);
+//		g.setColor(Color.white);
+//		g.drawString(backpack, 1050f, 590f);
 		if (mapTab[robot.getYMap()][robot.getXMap()] == 'S') {
 
 			Stain actStain = getStainByPosition(robot.getXMap(),
@@ -218,7 +219,41 @@ public class GarbageRobot extends BasicGame {
 					actStain.setTool(equipment);
 					if (!tools.contains(equipment))
 						tools = tools + equipment + "\n";
+					/*					
+					String[]callAndArgs = {"python", "net.py", type, detergent, equipment}; //arguments
+		            Process p = Runtime.getRuntime().exec(callAndArgs);    
+		            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		            //BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+		            
+		            String s = stdInput.readLine();
+		            System.out.println(s);*/
+					String s = null;
+			        try {
+			            String[]callAndArgs = {"python", "net.py", type, detergent, equipment}; //arguments
+			            Process p = Runtime.getRuntime().exec(callAndArgs);    
+			            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
+			            //output
+			            while ((s = stdInput.readLine()) != null) {
+//			                System.out.println(s);
+			                trash = s;
+			            }
+
+			            while ((s = stdError.readLine()) != null) {
+//			                System.out.println(s);
+			                trash = s;
+			            }
+			        }
+
+			        catch (IOException e) {
+			            System.out.println("exception occured");
+			            e.printStackTrace();
+			            System.exit(-1);
+			        }
+
+					
+					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -261,9 +296,9 @@ public class GarbageRobot extends BasicGame {
 			g.drawString("EQUIPMENT: " + actStain.getTool(), 1050f, 530f);
 
 			g.setColor(Color.green);
-			g.drawString("BACKPACK: ", 1050f, 570f);
+			g.drawString("TRASH: ", 1050f, 570f);
 			g.setColor(Color.white);
-			g.drawString(backpack, 1050f, 590f);
+			g.drawString(trash, 1050f, 590f);
 
 		} else {
 			g.drawString("Needed detergents: ", 1050f, 70f);
