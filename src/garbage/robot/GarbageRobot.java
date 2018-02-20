@@ -291,6 +291,7 @@ public class GarbageRobot extends BasicGame {
 				g.drawString(trash, 1050f, 590f);
 			} else { // Sprzatanie
 				cleaning = false;
+				actStain.setImage("data/empty.png");
 				float shiftX = 0;
 				float shiftY = 0;
 				String fieldToDraw = "";
