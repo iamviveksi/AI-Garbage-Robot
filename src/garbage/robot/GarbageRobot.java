@@ -585,7 +585,7 @@ public class GarbageRobot extends BasicGame {
 	private String addToBin(String parStain, String parDet, String parEq) {
 		String s, er, ret = "";
 		try {
-			String[] callAndArgs = { "python", "net.py", parStain, parDet,
+			String[] callAndArgs = { "python", "poligon/segregation/net.py", parStain, parDet,
 					parEq }; // arguments
 			Process p = Runtime.getRuntime().exec(callAndArgs);
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
